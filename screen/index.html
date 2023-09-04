@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al-judi Centre</title>
+    <link rel="stylesheet" href="Style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="Screen">
+        <div class="top">
+            <div class="mosque-name">
+                <h1>Al-Judi Masjid</h1>
+            </div>
+            <div class="time">
+                <p>The time is here</p>
+            </div>
+            <div class="dates">
+                <div id="normal"></div>
+                <div id="islamic">
+                    <script src="./hijri.js"></script>
+                </div>
+            </div>
+        </div>
+        <div class="middle">
+            <div class="overlay" id="urgent">
+                <div class="countdown-text" id="urgent"></div>
+            </div>
+            <div class="prayertimes">
+                <table class="Table">
+                    <tr>
+                        <th></th>
+                        <th>Jama'at</th>
+                    </tr>
+
+                    <tr class="Fajr">
+                        <td>Fajr</td>
+                        <td id="FajrTime"></td>
+                    </tr>
+
+                    <tr class="Dhuhr">
+                        <td>Dhuhr</td>
+                        <td id="DhuhrTime"></td>
+                    </tr>
+
+                    <tr class="Asr">
+                        <td>Asr</td>
+                        <td id="AsrTime"></td>
+                    </tr>
+
+                    <tr class="Maghrib">
+                        <td>Maghrib</td>
+                        <td colspan="2" id="MaghribTime"></td>
+                    </tr>
+
+                    <tr class="Isha">
+                        <td>Isha</td>
+                        <td colspan="2" id="IshaTime"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right">
+                <div class="rotating-content main">This is main content</div>
+                <div class="rotating-content quran">This is Quran content</div>
+                <div class="rotating-content donations">This is donations content</div>
+                <div class="rotating-content contact">This is contact content</div>
+                <div class="rotating-content website">This is website content</div>
+                <div class="rotating-content hadith">This is hadith content</div>
+                <div class="countdown" id="countdownDiv">This is countdown content</div>
+                <div class="prayer-progress" id="prayerProgressDiv">This is prayer progress content</div>
+            </div>
+        </div>
+    </div>
+    <script src="./time.js"></script>
+    <script src="./date.js"></script>
+    <script src="./refresh.js"></script>
+    <script src="./prayertimes.js"></script>
+    <script src="./right-side.js"></script>
+</body>
+
+</html>

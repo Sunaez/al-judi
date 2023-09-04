@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --background-color: #ffeac5;
+  --sidebar-color: #3b3b3b;
+  --primary-color: #3A5A40;
+  --primary-color-light: #588157;
+  --toggle-color: #707d89;
+  --text-color: #252832;
+}
+
+
+
+
+* {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 4vw;
+}
+
+h2 {
+  margin: 0;
+  font-size: 2vw;
+  text-align: center;
+  color: var(--text-color);
+}
+
+h4 {
+  margin: 0;
+  padding: 0.5vw;
+  font-size: 2vw;
+  color: var(--text-color);
+}
+
+p {
+  margin: 0;
+}
+
+.Screen {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image: url("bg.jpg");
+  box-sizing: border-box;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 10vh;
+  padding: 1vw;
+  align-items: center;
+  background-color: var(--background-color);
+}
+
+.mosque-name {
+  color: var(--text-color);
+  display: flex;
+  justify-self: center;
+  align-self: center;
+  font-size: 2.5vw;
+  font-weight: 800;
+}
+
+.dates {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 5vh auto;
+  justify-items: end;
+  align-items: center;
+}
+
+.time {
+  width: 100%;
+  font-weight: 900;
+  color: var(--text-color);
+  text-align: center;
+  font-size: 5vw;
+  align-self: center;
+  border-radius: 25px;
+}
+
+#normal,
+#islamic {
+  font-weight: bold;
+  color: var(--text-color);
+  font-size: 2.5vw;
+  text-align: right;
+}
+
+.middle {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 1;
+}
+
+
+/* CSS for the overlay */
+.overlay {
+  display: none; /* Initially hide the overlay */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 215, 0, 0.8); /* Light yellow-orange background with some transparency */
+  color: #000; /* Black text color */
+  text-align: center;
+  padding-top: 20%; /* Adjust as needed to center the content vertically */
+  z-index: 999; /* Ensure the overlay is on top of other content */
+}
+
+/* CSS for the countdown text */
+.countdown-text {
+  font-size: 6vw; /* Adjust the font size as needed */
+}
+
+
+
+.prayertimes {
+  padding: 5px 15px;
+}
+
+.Table {
+  border-collapse: collapse;
+  width: 100%;
+  height: 75vh;
+}
+
+.Table th {
+  border: none;
+  /* Remove border */
+  font-size: 3.5vw;
+  font-weight: 900;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.Table td {
+  border: none;
+  /* Remove border */
+  font-size: 5.4vw;
+  font-weight: 900;
+  text-align: center;
+  color: var(--text-color);
+}
+
+table tr td:first-child {
+  text-align: left;
+}
+
+.Table th {
+  color: var(--text-color);
+}
+
+.Fajr,
+.Dhuhr,
+.Asr,
+.Maghrib,
+.Isha {
+  color: var(--text-color);
+}
+
+.Maghrib td,
+.Isha td {
+  text-align: center;
+}
+
+
+
+.entry {
+  padding-top: 2vw;
+}
+
+
+
+.rotating-content {
+  display: none;
+}
+.translation-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+}
+
+.source {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  color: var(--text-color);
+}
+
+.source * {
+  font-size: 2.5vw;
+  font-weight: 800;
+}
+
+
+#translation {
+  padding: 0.8vw;
+  padding-bottom: 2px;
+  font-size: 3vw;
+  font-weight: 700;
+  color: var(--text-color);
+  min-height: 55vh;
+  max-height: 60vh;
+  overflow: hidden;
+}
+
+
+
+
+
+
+
+
