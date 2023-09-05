@@ -132,6 +132,10 @@ p {
 /* CSS for the countdown text */
 .countdown-text {
   font-size: 6vw; /* Adjust the font size as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 

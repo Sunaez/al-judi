@@ -38,16 +38,16 @@ function parseCSV(csv) {
 }
 
 
+
 function filterByToday(csv) {
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
     const yyyy = today.getFullYear();
-    const formattedToday = dd + '/' + mm + '/' + yyyy;
+    const formattedToday = `${dd}/${mm}/${yyyy}`;
 
     const matchingRow = csv.split('\n').find(row => {
         const rowData = row.split(',');
-        // Assuming the date is in the first column (index 0).
         return rowData[0].trim() === formattedToday;
     });
 
@@ -66,8 +66,8 @@ function filterByToday(csv) {
             { time: rowData[2], name: 'Fajr Jamaat' },
             { time: rowData[4], name: 'Dhuhr Jamaat' },
             { time: rowData[6], name: 'Asr Jamaat' },
-            { time: rowData[7], name: 'Maghrib (Regular time)' },
-            { time: rowData[8], name: 'Isha (Regular time)' }
+            { time: rowData[7], name: 'Maghrib' },
+            { time: rowData[8], name: 'Isha' }
         ];
 
         let nextPrayer = null;
@@ -90,30 +90,44 @@ function filterByToday(csv) {
             const prayerHour = parseInt(prayerTime[0]);
             const prayerMinute = parseInt(prayerTime[1]);
             const timeUntilNextPrayer = ((prayerHour - currentHour) * 60 + prayerMinute - currentMinute);
-
+        
             const countdownElement = document.getElementById('countdownDiv');
             const urgentOverlay = document.getElementById('urgent');
-
-            if (timeUntilNextPrayer <= 1) {
+        
+            if (timeUntilNextPrayer <= 60) {
                 // If there's a minute or less left, display countdown in seconds
-                const timeUntilNextPrayerSeconds = timeUntilNextPrayer * 60;
-                countdownElement.textContent = `${timeUntilNextPrayerSeconds} seconds until ${nextPrayer.name}`;
+                const secondsRemaining = 60 - (Math.floor(Date.now() / 1000) % 60);
+                countdownElement.textContent = `${secondsRemaining} seconds until ${nextPrayer.name}`;
                 urgentOverlay.style.display = 'block'; // Show the overlay
             } else {
                 countdownElement.textContent = `${timeUntilNextPrayer} minutes until ${nextPrayer.name}`;
                 urgentOverlay.style.display = 'none'; // Hide the overlay
             }
+        
+            // Check if it's time for the next prayer and display the overlay
+            if (timeUntilNextPrayer === 0) {
+                showPrayerInProgressOverlay(nextPrayer.name);
+            } else {
+                // Call updateCountdownTimer with the next prayer time here
+                const nextPrayerTime = new Date();
+                nextPrayerTime.setHours(prayerHour, prayerMinute, 0);
+                updateCountdownTimer(nextPrayerTime, countdownElement, urgentOverlay);
+            }
         } else {
+            // If there's no prayer time, you can choose not to display anything
             const countdownElement = document.getElementById('countdownDiv');
+            countdownElement.textContent = '';
             const urgentOverlay = document.getElementById('urgent');
-            countdownElement.textContent = 'No upcoming prayer today.';
             urgentOverlay.style.display = 'none'; // Hide the overlay
+        
+            // Call updateCountdown every half second (500 milliseconds)
+            setTimeout(updateCountdown, 500);
         }
-    } else {
-        const csvTableContainer = document.getElementById('csvTableContainer');
-        csvTableContainer.innerHTML = 'No matching data for today.';
+        
+        
     }
 }
+
 
 function updateCountdown() {
     fetch(`../${getCurrentMonthCSV()}`)
@@ -126,8 +140,9 @@ function updateCountdown() {
         });
 }
 
-// Call updateCountdown every second (1000 milliseconds)
-setInterval(updateCountdown, 1000);
+
+// Call updateCountdown every second (1 second)
+setInterval(updateCountdown, 1 * 1000);
 
 // Initial call to updateCountdown
 updateCountdown();

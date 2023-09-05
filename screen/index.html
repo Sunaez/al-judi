@@ -17,9 +17,10 @@
             <div class="mosque-name">
                 <h1>Al-Judi Masjid</h1>
             </div>
-            <div class="time">
+            <div class="time" id="time">
                 <p>The time is here</p>
             </div>
+            <div class="timeS" style="display: none;" id="timeS"></div>
             <div class="dates">
                 <div id="normal"></div>
                 <div id="islamic">
@@ -29,7 +30,8 @@
         </div>
         <div class="middle">
             <div class="overlay" id="urgent">
-                <div class="countdown-text" id="urgent"></div>
+                <div class="countdown-text" id="countdownDiv"></div>
+                <div class="prayer-in-progress-text" id="prayerInProgressDiv"></div>
             </div>
             <div class="prayertimes">
                 <table class="Table">
@@ -65,20 +67,18 @@
                 </table>
             </div>
             <div class="right">
-                <div class="rotating-content main">This is main content</div>
+                <div class="rotating-content main" style="display: block;">This is main content</div>
                 <div class="rotating-content quran">This is Quran content</div>
                 <div class="rotating-content donations">This is donations content</div>
                 <div class="rotating-content contact">This is contact content</div>
                 <div class="rotating-content website">This is website content</div>
                 <div class="rotating-content hadith">This is hadith content</div>
-                <div class="rotating-content countdown" id="countdownDiv">This is countdown content</div>
-                <div class="prayer-progress" id="prayerProgressDiv">This is prayer progress content</div>
+                <div class="rotating-content countdown" id="prayercountdown">This is countdown content</div>
             </div>
         </div>
     </div>
     <script src="./time.js"></script>
     <script src="./date.js"></script>
-    <script src="./refresh.js"></script>
     <script src="./prayertimes.js"></script>
     <script src="./right-side.js"></script>
 </body>
