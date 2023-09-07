@@ -89,45 +89,60 @@ function filterByToday(csv) {
             const prayerTime = nextPrayer.time.split(':');
             const prayerHour = parseInt(prayerTime[0]);
             const prayerMinute = parseInt(prayerTime[1]);
-            const timeUntilNextPrayer = ((prayerHour - currentHour) * 60 + prayerMinute - currentMinute);
+            const MinutesLeft = ((prayerHour - currentHour) * 60 + prayerMinute - currentMinute);
+            const secondsRemaining = 60 - (Math.floor(Date.now() / 1000) % 60);
         
             const countdownElement = document.getElementById('countdownDiv');
             const urgentOverlay = document.getElementById('urgent');
-        
-            if (timeUntilNextPrayer <= 60) {
-                // If there's a minute or less left, display countdown in seconds
-                const secondsRemaining = 60 - (Math.floor(Date.now() / 1000) % 60);
+            const prayerIP = document.getElementById('prayerInProgressDiv');
+
+            if (MinutesLeft > 1 && (!wasPrayer)) {
+                setTimeout(updateCountdown, 1000);
+                prayerIP.style.display = 'block';
+                countdownElement.style.display = 'none';
+                urgentOverlay.style.display = 'none';
+            } else if (MinutesLeft === 1) {
                 countdownElement.textContent = `${secondsRemaining} seconds until ${nextPrayer.name}`;
+                prayerIP.textContent = `Current prayer: ${nextPrayer.name}`;
+                countdownElement.style.display = 'block';
                 urgentOverlay.style.display = 'block'; // Show the overlay
-            } else {
-                countdownElement.textContent = `${timeUntilNextPrayer} minutes until ${nextPrayer.name}`;
-                urgentOverlay.style.display = 'none'; // Hide the overlay
+                prayerIP.style.display = 'none';
+                setTimeout(updateCountdown, 1000);
+                setTimeout(prayerInProgress,60 * 1000);
+                setWasPrayerTrueForTenMinutes();
             }
-        
-            // Check if it's time for the next prayer and display the overlay
-            if (timeUntilNextPrayer === 0) {
-                showPrayerInProgressOverlay(nextPrayer.name);
-            } else {
-                // Call updateCountdownTimer with the next prayer time here
-                const nextPrayerTime = new Date();
-                nextPrayerTime.setHours(prayerHour, prayerMinute, 0);
-                updateCountdownTimer(nextPrayerTime, countdownElement, urgentOverlay);
-            }
-        } else {
-            // If there's no prayer time, you can choose not to display anything
-            const countdownElement = document.getElementById('countdownDiv');
-            countdownElement.textContent = '';
-            const urgentOverlay = document.getElementById('urgent');
-            urgentOverlay.style.display = 'none'; // Hide the overlay
-        
-            // Call updateCountdown every half second (500 milliseconds)
-            setTimeout(updateCountdown, 500);
         }
-        
-        
     }
 }
-
+let wasPrayer = false;
+function setWasPrayerTrueForTenMinutes() {
+    wasPrayer = true;
+  
+    // Set a timer to set wasPrayer back to false after 10 minutes
+    setTimeout(function() {
+      wasPrayer = false;
+    }, 600000); // 10 minutes in milliseconds
+  }
+function noPrayer() {
+    const countdownElement = document.getElementById('countdownDiv');
+    const urgentOverlay = document.getElementById('urgent');
+    const prayerIP = document.getElementById('prayerInProgressDiv');
+    // Hide the elements
+    urgentOverlay.style.display = 'none';
+    prayerIP.style.display = 'none';
+    countdownElement.style.display = 'none';
+  }
+function prayerInProgress() {
+    const countdownElement = document.getElementById('countdownDiv');
+    const urgentOverlay = document.getElementById('urgent');
+    const prayerIP = document.getElementById('prayerInProgressDiv');
+    // Show the elements
+    if (wasPrayer) {
+    urgentOverlay.style.display = 'block';
+    prayerIP.style.display = 'block';
+    countdownElement.style.display = 'none';
+    }
+  }
 
 function updateCountdown() {
     fetch(`../${getCurrentMonthCSV()}`)
@@ -140,9 +155,6 @@ function updateCountdown() {
         });
 }
 
-
-// Call updateCountdown every second (1 second)
-setInterval(updateCountdown, 1 * 1000);
 
 // Initial call to updateCountdown
 updateCountdown();
