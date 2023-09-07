@@ -98,16 +98,14 @@ function filterByToday(csv) {
 
             if (MinutesLeft > 1 && (!wasPrayer)) {
                 setTimeout(updateCountdown, 1000);
-                setTimeout(prayerInProgress, 1 * 1000);
             } else if (MinutesLeft === 1) {
                 countdownElement.textContent = `${secondsRemaining} seconds until ${nextPrayer.name}`;
                 prayerIP.textContent = `Current prayer: ${nextPrayer.name}`;
                 countdownElement.style.display = 'block';
-                urgentOverlay.style.display = 'block'; // Show the overlay
+                urgentOverlay.style.display = 'block';
                 prayerIP.style.display = 'none';
                 setTimeout(updateCountdown, 1000);
-                setTimeout(setWasPrayerTrueForTenMinutes, 10 * 1000);
-                setTimeout(prayerInProgress, 1 * 1000);
+                setTimeout(setWasPrayerTrueForTenMinutes, 58 * 1000);
             }
         }
     }
@@ -120,7 +118,7 @@ function setWasPrayerTrueForTenMinutes() {
     // Set a timer to set wasPrayer back to false after 10 minutes
     setTimeout(function () {
         wasPrayer = false;
-    }, 60 * 1000); // 10 minutes in milliseconds
+    }, 10 * 60 * 1000); // 10 minutes
 }
 function prayerInProgress() {
     const countdownElement = document.getElementById('countdownDiv');
@@ -137,7 +135,7 @@ function prayerInProgress() {
         countdownElement.style.display = 'none';
     }
 }
-setTimeout(prayerInProgress, 1 * 1000);
+setInterval(prayerInProgress, 1 * 1000);
 
 function updateCountdown() {
     fetch(`../${getCurrentMonthCSV()}`)
