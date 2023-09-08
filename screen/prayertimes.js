@@ -78,7 +78,7 @@ function filterByToday(csv) {
 
             if (
                 (prayerHour > currentHour) ||
-                (prayerHour === currentHour && prayerMinute > currentMinute)
+                (prayerHour === currentHour && prayerMinute >= currentMinute)
             ) {
                 nextPrayer = nextPrayerTimes[i];
                 break;
@@ -90,28 +90,75 @@ function filterByToday(csv) {
             const prayerHour = parseInt(prayerTime[0]);
             const prayerMinute = parseInt(prayerTime[1]);
             const MinutesLeft = ((prayerHour - currentHour) * 60 + prayerMinute - currentMinute);
-            const secondsRemaining = 60 - (Math.floor(Date.now() / 1000) % 60);
 
+            const prayername = nextPrayer.name;
             const countdownElement = document.getElementById('countdownDiv');
             const urgentOverlay = document.getElementById('urgent');
             const prayerIP = document.getElementById('prayerInProgressDiv');
 
-            if (MinutesLeft > 1 && (!wasPrayer)) {
-                setTimeout(updateCountdown, 1000);
-            } else if (MinutesLeft === 1) {
-                countdownElement.textContent = `${secondsRemaining} seconds until ${nextPrayer.name}`;
-                prayerIP.textContent = `Current prayer: ${nextPrayer.name}`;
-                countdownElement.style.display = 'block';
+            if (MinutesLeft > 1) {
+                // Check if wasPrayer is true
+                if (wasPrayer) {
+                    // Show the urgent overlay and prayer in progress
+                    urgentOverlay.style.display = 'block';
+                    prayerIP.style.display = 'block';
+                    countdownElement.style.display = 'none';
+                } else {
+                    urgentOverlay.style.display = 'none';
+                    prayerIP.style.display = 'none';
+                    countdownElement.style.display = 'none';
+                }
+            }
+            if (MinutesLeft === 1) {
                 urgentOverlay.style.display = 'block';
                 prayerIP.style.display = 'none';
-                setTimeout(updateCountdown, 1000);
-                setTimeout(setWasPrayerTrueForTenMinutes, 58 * 1000);
+                countdownElement.style.display = 'block';
+                // Execute this code once to set the prayer name
+
+                // Run this code every second to update the countdown
+                setInterval(() => {
+                    const secondsRemaining = 60 - (Math.floor(Date.now() / 1000) % 60);
+                    countdownElement.textContent = `${secondsRemaining} seconds until ${nextPrayer.name}`;
+                    prayerIP.textContent = `Current prayer: ${prayername}`;
+                }, 1000);
             }
+            if (MinutesLeft === 0) {
+                // Run setWasPrayerTrueForTenMinutes function every second
+                setInterval(() => {
+                    setWasPrayerTrueForTenMinutes();
+                }, 1000);
+                // Show the urgent overlay and prayer in progress
+                urgentOverlay.style.display = 'block';
+                prayerIP.style.display = 'block';
+                countdownElement.style.display = 'none';
+            }
+
         }
     }
 }
+function onMinuteChange(callback) {
+    let previousMinute = new Date().getMinutes(); // Get the current minute
+
+    setInterval(() => {
+        const currentMinute = new Date().getMinutes(); // Get the current minute
+
+        if (currentMinute !== previousMinute) {
+            // Minute has changed, call the callback function
+            callback();
+
+            // Update the previous minute
+            previousMinute = currentMinute;
+        }
+    }, 1000); // Check every second
+}
+onMinuteChange(() => {
+    // Run the updateCountdown function each time there's a new minute
+    updateCountdown();
+});
 
 let wasPrayer = false;
+
+
 
 function setWasPrayerTrueForTenMinutes() {
     wasPrayer = true;
@@ -120,22 +167,7 @@ function setWasPrayerTrueForTenMinutes() {
         wasPrayer = false;
     }, 10 * 60 * 1000); // 10 minutes
 }
-function prayerInProgress() {
-    const countdownElement = document.getElementById('countdownDiv');
-    const urgentOverlay = document.getElementById('urgent');
-    const prayerIP = document.getElementById('prayerInProgressDiv');
-    // Show the elements
-    if (wasPrayer) {
-        urgentOverlay.style.display = 'block';
-        prayerIP.style.display = 'block';
-        countdownElement.style.display = 'none';
-    } else {
-        urgentOverlay.style.display = 'none';
-        prayerIP.style.display = 'none';
-        countdownElement.style.display = 'none';
-    }
-}
-setInterval(prayerInProgress, 1 * 1000);
+
 
 function updateCountdown() {
     fetch(`../${getCurrentMonthCSV()}`)
