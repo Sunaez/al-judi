@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+
+:root {
+    --accent-dark: #bdc2cb;
+    --accent-light: #697386;
+    --background-dark: #0e0d0b;
+    --background-light: #ffeac5;
+    --primary-dark: #543e18;
+    --primary-light: #543e18;
+    --secondary-dark: #241c0f;
+    --secondary-light: #f0e8db;
+    --text-dark: #ffeac5;
+    --text-light: #0e0d0b;
+    
+    --tran-02: all 0.2s ease-in-out;
+    --tran-03: all 0.3s ease-in-out;
+    --tran-04: all 0.4s ease-in-out;
+    --tran-05: all 0.5s ease-in-out;
+}
+
+* {
+    font-family: 'Poppins', sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: var(--background-light);
+    width: 100vw;
+    height: 100vh;
+}
+a {
+    text-decoration: none;
+    border-radius: 10px;
+    background-color: var(--primary-light);
+    transition: var(--tran-03);
+}
+a:hover {
+    text-decoration: none;
+    background-color: var(--secondary-light);
+    transition: var(--tran-02);
+}
+
+.name {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    font-size: 25px;
+}
+
+.menuitems {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    align-self: center;
+    justify-content: center;
+    gap: 15px;
+}
+.navItem {
+    background-color: var(--accent-dark);
+    border-radius: 10px;
+    text-decoration: none;
+
+}
+.navText {
+    font-size: 18px;
+    text-decoration: none;
+    color: var(--text-light);
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 66% 33%;
+    gap: 20px; 
+}
+.content {
+    grid-column: 1;
+}
+
+.prayertable {
+    grid-column: 2;
+}
+
+.dontation-info {
+    grid-column: 2;
+}
+.Screen-item {
+    background-color: var(--accent-dark);
+    border-radius: 10px;
+    text-decoration: none;
+    grid-column: 2;
+    width: fit-content;
+}
