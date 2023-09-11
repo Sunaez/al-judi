@@ -2,16 +2,16 @@
 
 
 :root {
-    --accent-dark: #bdc2cb;
-    --accent-light: #697386;
-    --background-dark: #0e0d0b;
-    --background-light: #ffeac5;
-    --primary-dark: #543e18;
-    --primary-light: #543e18;
-    --secondary-dark: #241c0f;
-    --secondary-light: #f0e8db;
-    --text-dark: #ffeac5;
-    --text-light: #0e0d0b;
+    --accent-dark: #6a7585;
+    --accent-light: #262a30;
+    --background-dark: #070604;
+    --background-light: #f9f6f0;
+    --primary-dark: #4e3a13;
+    --primary-light: #b09c73;
+    --secondary-dark: #181107;
+    --secondary-light: #eedfc9;
+    --text-dark: #f9f6f0;
+    --text-light: #070604;
 
     --tran-02: all 0.2s ease-in-out;
     --tran-03: all 0.3s ease-in-out;
@@ -32,31 +32,30 @@ body {
     overflow-x: hidden;
     overflow-y: scroll;
 }
+
 ::-webkit-scrollbar {
     width: 8px;
 }
+
 ::-webkit-scrollbar-thumb {
     background-color: var(--accent-light);
     border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background-color: var(--text-light);
 }
+
 ::-webkit-scrollbar-track {
     background-color: var(--accent-light);
 }
 
-a {
-    text-decoration: none;
-    border-radius: 10px;
-    background-color: var(--primary-light);
-    transition: var(--tran-03);
-}
-
-a:hover {
-    text-decoration: none;
-    background-color: var(--secondary-light);
-    transition: var(--tran-02);
+.header {
+    height: 25vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(bg.jpg);
 }
 
 .name {
@@ -68,50 +67,110 @@ a:hover {
 
 .menuitems {
     display: flex;
-    flex-wrap: nowrap;
-    width: 100%;
-    align-self: center;
-    justify-content: center;
-    gap: 15px;
-}
+    justify-content: space-evenly; 
+    background-color: var(--primary-light);
+    margin-bottom: 15px;
 
+}
 .navItem {
-    background-color: var(--accent-dark);
+    position: relative; /* Add this to position pseudo-elements */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 10px;
     text-decoration: none;
-
+    list-style: none;
+    width: 100%;
+    height: 35px;
 }
-
+.navItem::before, .navItem::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px; /* Adjust the width of the border as needed */
+    background-color: var(--accent-light); /* Adjust the color as needed */
+}
+.navItem::before {
+    left: 0;
+}
+.navItem::after {
+    right: 0;
+}
+.navItem a {
+    text-decoration: none;
+    align-items: center;
+    transition: var(--tran-03);
+    width: 100%;
+    height: 100%;
+}
+.navItem a:hover {
+    text-decoration: none;
+    background-color: var(--secondary-light);
+    transition: var(--tran-02);
+}
 .navText {
+    text-align: center;
     font-size: 18px;
     text-decoration: none;
     color: var(--text-light);
+    height: 100%;
+}
+
+
+
+.bx {
+    color: var(--text-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .main-content {
-    display: grid;
-    grid-template-columns: 66% 33%;
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 25px;
 }
-
 .content {
-    grid-column: 1;
+    flex: 1;
+    order: 2;
+}
+.prayertable {
+    flex: 1;
+    order: 1;
+}
+.dontation-info {
+    flex: 1;
+    order: 3;
 }
 
-.prayertable {
-    grid-column: 2;
+@media (min-width: 768px) {
+    .main-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr; /* Three columns: 2 parts for content, and 1 part each for prayertable and donation-info */
+        gap: 20px; /* Adjust the gap as needed */
+        width: 100%;
+    }
+    .content {
+        grid-area: 1 / 1 ;
+    }
+    .dontation-info {
+        grid-column: 2 / 2; 
+    } 
 }
 
 .Table {
     border-collapse: collapse;
-    width: 100%;
+    width: 250px;
 }
 
 .Table th {
     border: none;
     /* Remove border */
     font-size: 16px;
-    font-weight: 900;
+    font-weight: 600;
     text-align: left;
     color: var(--text-light);
 }
@@ -125,7 +184,6 @@ a:hover {
     color: var(--text-light);
 }
 
-
 .Fajr,
 .Dhuhr,
 .Asr,
@@ -134,16 +192,11 @@ a:hover {
     color: var(--text-light);
 }
 
-
-
-.dontation-info {
-    grid-column: 2;
-}
-
 .Screen-item {
     background-color: var(--accent-dark);
     border-radius: 10px;
+    width: 250px;
+    height: 250px;
     text-decoration: none;
-    grid-column: 2;
     width: fit-content;
 }

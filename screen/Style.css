@@ -59,7 +59,7 @@ p {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url("bg.jpg");
+  background-image: url("//bg.jpg");
   box-sizing: border-box;
 }
 
