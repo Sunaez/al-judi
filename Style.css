@@ -30,7 +30,7 @@ body {
     width: 100vw;
     height: 100vh;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 ::-webkit-scrollbar {
@@ -50,71 +50,92 @@ body {
     background-color: var(--accent-light);
 }
 
-.header {
-    height: 25vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url(bg.jpg);
+.topnav {
+    overflow: hidden;
+    background-image: url('bg.jpg');
+    /* Set background image */
+    background-size: cover;
+    /* Ensure the background image covers the entire navbar */
+    background-repeat: repeat;
+    background-position: center;
+    /* Center the background image */
 }
 
-.name {
-    width: 100%;
+.topnav a {
+    float: left;
+    display: block;
+    color: var(--text-light);
     text-align: center;
-    padding: 15px;
-    font-size: 25px;
-}
-
-.menuitems {
-    display: flex;
-    justify-content: space-evenly; 
-    background-color: var(--primary-light);
-    margin-bottom: 15px;
-
-}
-.navItem {
-    position: relative; /* Add this to position pseudo-elements */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
+    padding: 14px 16px;
     text-decoration: none;
-    list-style: none;
-    width: 100%;
-    height: 35px;
-}
-.navItem::before, .navItem::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 2px; /* Adjust the width of the border as needed */
-    background-color: var(--accent-light); /* Adjust the color as needed */
-}
-.navItem::before {
-    left: 0;
-}
-.navItem::after {
-    right: 0;
-}
-.navItem a {
-    text-decoration: none;
-    align-items: center;
-    transition: var(--tran-03);
-    width: 100%;
-    height: 100%;
-}
-.navItem a:hover {
-    text-decoration: none;
-    background-color: var(--secondary-light);
+    font-size: 17px;
     transition: var(--tran-02);
 }
-.navText {
+
+.topnav a:hover {
+    background-color: var(--secondary-light);
+    color: black;
+}
+
+.topnav a.active {
+    background-color: var(--primary-light);
+    color: rgb(0, 0, 0);
+}
+
+.topnav .icon {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+    .topnav a:not(:first-child) {
+        display: none;
+    }
+
+    .topnav a.icon {
+        float: right;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .topnav.responsive {
+        position: relative;
+    }
+
+    .topnav.responsive .icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .topnav.responsive a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+}
+
+/* Additional styles for the menuitems */
+.menuitems {
+    background-color: #b09c73;
     text-align: center;
-    font-size: 18px;
+}
+
+.navItem {
+    display: inline-block;
+    margin: 10px;
+}
+
+.menuitems a {
+    color: rgb(0, 0, 0);
     text-decoration: none;
-    color: var(--text-light);
-    height: 100%;
+    font-size: 16px;
+    transition: var(--tran-02);
+}
+
+.menuitems a:hover {
+    text-decoration: underline;
+    transition: var(--tran-02);
 }
 
 
@@ -133,10 +154,12 @@ body {
     align-items: center;
     gap: 25px;
 }
+
 .content {
     flex: 1;
     order: 2;
 }
+
 .prayertable {
     flex: 1;
     order: 1;
@@ -145,52 +168,74 @@ body {
     flex: 1;
     order: 3;
 }
-
 @media (min-width: 768px) {
     .main-content {
         display: grid;
-        grid-template-columns: 2fr 1fr; /* Three columns: 2 parts for content, and 1 part each for prayertable and donation-info */
-        gap: 20px; /* Adjust the gap as needed */
+        grid-template-columns: 2fr 1fr;
+        /* Three columns: 2 parts for content, and 1 part each for prayertable and donation-info */
+        gap: 20px;
+        /* Adjust the gap as needed */
         width: 100%;
     }
+
     .content {
-        grid-area: 1 / 1 ;
+        grid-area: 1 / 1;
     }
+
     .dontation-info {
-        grid-column: 2 / 2; 
-    } 
+        grid-column: 2 / 2;
+    }
+}
+
+.date-time {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    font-size: 25px; /* Increase font size */
 }
 
 .Table {
     border-collapse: collapse;
-    width: 250px;
+    width: 400px;
 }
 
+/* Style the table header (first row) */
 .Table th {
-    border: none;
-    /* Remove border */
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 25px; /* Increase font size */
     text-align: left;
     color: var(--text-light);
 }
 
-.Table td {
-    border: none;
-    /* Remove border */
-    font-size: 14px;
+/* Style the first column (normal) */
+.Table td:first-child {
+    font-size: 20px; /* Increase font size */
     font-weight: 900;
-
     color: var(--text-light);
 }
 
-.Fajr,
-.Dhuhr,
-.Asr,
-.Maghrib,
-.Isha {
+/* Style the second column (background color: primary-light) */
+.Table td:nth-child(2),
+.Table th:nth-child(2) {
+    font-size: 20px; /* Increase font size */
+    font-weight: 900;
     color: var(--text-light);
+    background-color: var(--primary-light);
+    text-align: center; /* Center headers and cells */
 }
+
+/* Style the third column (background color: secondary-light) */
+.Table td:nth-child(3),
+.Table th:nth-child(3) {
+    font-size: 20px; /* Increase font size */
+    font-weight: 900;
+    color: var(--text-light);
+    background-color: var(--secondary-light);
+    text-align: center; /* Center headers and cells */
+}
+
+
 
 .Screen-item {
     background-color: var(--accent-dark);

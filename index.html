@@ -6,114 +6,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Al-judi Masjid</title>
     <link rel="stylesheet" href="Style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
-    <div class="header">
-        <div class="name">
-            Welcome to <strong>Al-judi Masjid</strong>
-        </div>
+    <div class="topnav" id="myTopnav">
+        <a href="#home" class="active">Al-judi Masjid</a>
+        <a href="#news">Links</a>
+        <a href="#contact">Services</a>
+        <a href="#about">Contact</a>
+        <a href="#knowledge">Explore</a>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+        </a>
     </div>
-    <nav class="menuitems">
-        <div class="navItem">
-            <a href="index.html">
-                <!-- <i class='bx bx-home-alt-2'></i> -->
-                <div class="navText">
-                    Home
-                </div>
-            </a>
-        </div>
-        <div class="navItem">
-            <a href="useful-links.html">
-                <!-- Icon -->
-                <div class="navText">
-                    Links
-                </div>
-            </a>
-        </div>
-        <div class="navItem">
-            <a href="Services.html">
-                <!-- Icon -->
-                <div class="navText">
-                    Services
-                </div>
-            </a>
-        </div>
-        <div class="navItem">
-            <a href="Contact-us.html">
-                <!-- Icon -->
-                <div class="navText">
-                    Contact
-                </div>
-            </a>
-        </div>
-        <div class="navItem">
-            <a href="seeking-knowledge.html">
-                <!-- Icon -->
-                <div class="navText">
-                    Exploration
-                </div>
-            </a>
-        </div>
-    </nav>
     <div class="main-content">
-        <!-- TODO : Change the layout so it is more appealing, and is nicer to see
-        the current style changes way too much based on width which makes it very hard for
-        people who are on a computer -->
         <div class="content">
             Placeholder text for content
         </div>
         <div class="prayertable">
+            <div class="date-time">
+                <p id="date"></p>
+                <p id="time"></p>
+            </div>
             <div class="prayertimes">
                 <table class="Table">
                     <tr>
-                        <th>Prayer</th>
+                        <th></th>
                         <th>Start</th>
                         <th>Jama'at</th>
                     </tr>
-                
+
                     <tr class="Fajr">
                         <td>Fajr</td>
                         <td id="FajrStartTime"></td>
                         <td id="FajrJamaatTime"></td>
                     </tr>
-                
+
                     <tr class="Dhuhr">
                         <td>Dhuhr</td>
                         <td id="DhuhrStartTime"></td>
                         <td id="DhuhrJamaatTime"></td>
                     </tr>
-                
+
                     <tr class="Asr">
                         <td>Asr</td>
                         <td id="AsrStartTime"></td>
                         <td id="AsrJamaatTime"></td>
                     </tr>
-                
+
                     <tr class="Maghrib">
                         <td>Maghrib</td>
                         <td id="MaghribTime"></td>
                     </tr>
-                
+
                     <tr class="Isha">
                         <td>Isha</td>
                         <td id="IshaTime"></td>
                     </tr>
                 </table>
-                
+
             </div>
         </div>
         <div class="dontation-info">Donation information Here</div>
     </div>
-        <div class="Screen-item">
-            <a href="screen/index.html">
-                <div class="navText">
-                    Go to Masjid Screen
-                </div>
-            </a>
-        </div>
+    <div class="Screen-item">
+        <a href="screen/index.html">
+            <div class="navText">
+                Go to Masjid Screen
+            </div>
+        </a>
+    </div>
 
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myTopnav");
+            if (x.className === "topnav") {
+                x.className += " responsive";
+            } else {
+                x.className = "topnav";
+            }
+        }
+
+        function formatDate(date) {
+            const options = { month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function formatTime(time) {
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            return time.toLocaleTimeString('en-US', options);
+        }
+
+        function updateDateTime() {
+            const currentDateTime = new Date();
+            const formattedDate = formatDate(currentDateTime);
+            const formattedTime = formatTime(currentDateTime);
+
+            const dateElement = document.getElementById('date');
+            dateElement.textContent = formattedDate;
+
+            const timeElement = document.getElementById('time');
+            timeElement.textContent = formattedTime;
+        }
+
+        // Update the date and time every second (1000 milliseconds)
+        setInterval(updateDateTime, 1000);
+
+        // Initial update
+        updateDateTime();
+    </script>
     <script src="./prayertimes.js"></script>
 </body>
 
