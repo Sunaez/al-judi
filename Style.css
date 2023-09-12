@@ -241,7 +241,6 @@ body {
     background-color: var(--accent-dark);
     border-radius: 10px;
     width: 250px;
-    height: 250px;
     text-decoration: none;
     width: fit-content;
 }
