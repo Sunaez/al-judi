@@ -169,8 +169,23 @@ ul {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+ul header {
+    font-weight: bold;
+font-size: min(23px,3vw);
+}
 li {
+    padding: 10px;
+    font-size: min(20px,3vw);
+    background-color: var(--secondary-light);
+}
+
+li a{
     text-decoration:none;
+    color: var(--text-light);
+    transition: var(--tran-02);
+}
+li a:hover {
+    color: var(--primary-light);
 }
 
 .prayertable {
