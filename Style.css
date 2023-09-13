@@ -158,6 +158,19 @@ body {
 .content {
     flex: 1;
     order: 2;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+ul {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+li {
+    text-decoration:none;
 }
 
 .prayertable {
@@ -198,7 +211,7 @@ body {
 
 .Table {
     border-collapse: collapse;
-    width: 400px;
+    width:min(400px,100%);
 }
 
 /* Style the table header (first row) */
