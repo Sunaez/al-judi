@@ -171,11 +171,11 @@ ul {
 }
 ul header {
     font-weight: bold;
-font-size: min(23px,3vw);
+font-size: min(23px,5vw);
 }
 li {
     padding: 10px;
-    font-size: min(20px,3vw);
+    font-size: min(20px,4vw);
     background-color: var(--secondary-light);
 }
 
