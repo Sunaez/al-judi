@@ -1,15 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap');
 :root {
   --background-color: #ffeac5;
-  --sidebar-color: #3b3b3b;
+  --sidebar-color: #191A1F;
   --primary-color: #3A5A40;
   --primary-color-light: #588157;
   --toggle-color: #707d89;
   --text-color: #252832;
+  --text-color-invert: #dad7cd;
 }
 
-
+@font-face {
+  font-family: 'Uthmanic Script';
+  src: url("KFGQPC Uthmanic Script HAFS Regular.otf") format("opentype");
+}
 
 
 * {
@@ -59,7 +63,7 @@ p {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url("//bg.jpg");
+  background-image: url("/bg.jpg");
   box-sizing: border-box;
 }
 
@@ -109,11 +113,69 @@ p {
 
 .middle {
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 40% 60%;
   grid-template-rows: 1;
 }
 
+.primary {
+  width: 100%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
+.rotating-content {
+  width: 100%;
+  height: 100%;
+}
+
+.salaam {
+  font-size: 5vw;
+  text-align: center;
+  font-family: 'Noto Sans Arabic', sans-serif;
+}
+.welcome {
+  font-size: 5vw;
+  text-align: center;
+}
+
+.salaam, .verse {
+  font-family: 'Uthmanic Script', sans-serif;
+  font-weight: 600;
+  word-break: break-all;
+  direction: rtl;
+}
+
+
+.verse-container {
+  display: flex;
+  height: 40%;
+  width: 100%;
+  flex-direction: row-reverse;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+.verse {
+  font-size: 3vw;
+  flex-shrink: 0;
+  flex-grow: 0;
+  white-space: pre-wrap;
+  width: 100%; /* You can adjust the width as needed */
+}
+.translation {
+  padding: 10px;
+  font-size: 2.7vw;
+  font-weight: 600;
+  word-break: break-word;
+}
+.hadith {
+  padding: 10px;
+  font-size: 2.7vw;
+  font-weight: 600;
+  word-break: break-word;
+}
 /* CSS for the overlay */
 .overlay {
   display: none; /* Initially hide the overlay */
@@ -122,8 +184,8 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 215, 0, 0.8); /* Light yellow-orange background with some transparency */
-  color: #000; /* Black text color */
+  background-color: var(--sidebar-color); /* Light yellow-orange background with some transparency */
+  color: var(--text-color-invert); /* Black text color */
   text-align: center;
   padding-top: 20%; /* Adjust as needed to center the content vertically */
   z-index: 999; /* Ensure the overlay is on top of other content */
