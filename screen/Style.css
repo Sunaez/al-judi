@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
   --background-color: #ffeac5;
   --sidebar-color: #191A1F;
@@ -136,12 +137,14 @@ p {
   text-align: center;
   font-family: 'Noto Sans Arabic', sans-serif;
 }
+
 .welcome {
   font-size: 5vw;
   text-align: center;
 }
 
-.salaam, .verse {
+.salaam,
+.verse {
   font-family: 'Uthmanic Script', sans-serif;
   font-weight: 600;
   word-break: break-all;
@@ -157,50 +160,104 @@ p {
   padding: 10px;
   flex-wrap: wrap;
 }
+
 .verse {
   font-size: 3vw;
   flex-shrink: 0;
   flex-grow: 0;
   white-space: pre-wrap;
-  width: 100%; /* You can adjust the width as needed */
+  width: 100%;
+  /* You can adjust the width as needed */
 }
+
 .translation {
   padding: 10px;
   font-size: 2.7vw;
   font-weight: 600;
   word-break: break-word;
 }
+
 .hadith {
   padding: 10px;
   font-size: 2.7vw;
   font-weight: 600;
   word-break: break-word;
 }
+
 /* CSS for the overlay */
 .overlay {
-  display: none; /* Initially hide the overlay */
+  display: none;
+  /* Initially hide the overlay */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--sidebar-color); /* Light yellow-orange background with some transparency */
-  color: var(--text-color-invert); /* Black text color */
+  background-color: var(--sidebar-color);
+  /* Light yellow-orange background with some transparency */
+  color: var(--text-color-invert);
+  /* Black text color */
   text-align: center;
-  padding-top: 20%; /* Adjust as needed to center the content vertically */
-  z-index: 999; /* Ensure the overlay is on top of other content */
+  padding-top: 20%;
+  /* Adjust as needed to center the content vertically */
+  z-index: 999;
+  /* Ensure the overlay is on top of other content */
 }
 
 /* CSS for the countdown text */
-.countdown-text, .prayer-in-progress-text {
-  font-size: 6vw; /* Adjust the font size as needed */
+.countdown-text,
+.prayer-in-progress-text {
+  font-size: 6vw;
+  /* Adjust the font size as needed */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.details {
+  padding-top: 10px;
+  width: 100%;
+}
 
+.account {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 10px;
+}
+.acc {
+  font-size: 2.5vw;
+  font-weight: 600;
+  padding: 10px;
+}
+
+.website {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.web {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.web * {
+  font-size: 2.5vw;
+  font-weight: 600;
+  width: 100%;
+  padding: 10px;
+}
+
+.link {
+  font-size: 3vw;
+  font-weight: 2.8vw;
+}
 
 .prayertimes {
   padding: 5px 15px;
@@ -262,6 +319,7 @@ table tr td:first-child {
 .rotating-content {
   display: none;
 }
+
 .translation-info {
   display: flex;
   flex-direction: column;
@@ -294,11 +352,3 @@ table tr td:first-child {
   max-height: 60vh;
   overflow: hidden;
 }
-
-
-
-
-
-
-
-

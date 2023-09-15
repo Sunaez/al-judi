@@ -155,6 +155,10 @@ body {
     gap: 25px;
 }
 
+.main-content header {
+    padding: 10px;
+    font-size: min(23px,5vw);
+}
 .content {
     flex: 1;
     order: 2;
