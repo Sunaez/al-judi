@@ -18,18 +18,39 @@
         <a href="services.html">Services</a>
         <a href="contact.html">Contact</a>
         <a href="explore.html">Explore</a>
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-            <i class="fa fa-bars"></i>
-        </a>
     </div>
     <div class="main-content">
+
         <div class="content">
-            Placeholder text for content
+            <div class="welcoming">
+                <div class="welcome">
+                    Welcome to Al-judi Masjid
+                </div>
+                <div class="welcome-kurdish">
+                    بەخێر بێن بۆ مزگەوتی جودی
+                </div>
+            </div>
+            <div class="Location">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2429.6079509431456!2d-1.944412987721075!3d52.486233838612456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4870bd1af0da6141%3A0x3de546a47a69f8ca!2s298%20Dudley%20Rd%2C%20Birmingham%20B18%204HL!5e0!3m2!1sen!2suk!4v1695037330843!5m2!1sen!2suk" width="500" height="500" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="video">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/ZClu32Q-R0o?si=ZDRFE8sE5ZiXrfCM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <div class="dontation-info">
+                Please support the Masjid by donating generously
+                <p>Name: Sandwell and Birmingham kurdish Community</p>
+                <p>Acc. No: 33988449</p>
+                <p>Sort-code: 20-09-03</p>
+            </div>
         </div>
         <div class="prayertable">
+
             <div class="date-time">
                 <p id="date"></p>
                 <p id="time"></p>
+            </div>
+            <div class="jummah">
+                <header>Jummah Time is at 1:30PM</header>
             </div>
             <div class="prayertimes">
                 <table class="Table">
@@ -67,10 +88,15 @@
                         <td id="IshaTime" colspan="2"></td>
                     </tr>
                 </table>
-
+            </div>
+            <div class="download">
+                <a href="time_Sept2023.pdf" download class="download-button">
+                    <i class='bx bxs-download'></i>
+                    Download Prayer timetable
+                </a>
             </div>
         </div>
-        <div class="dontation-info">Donation information Here</div>
+       
     </div>
     <div class="Screen-item">
         <a href="screen/index.html">
@@ -81,14 +107,6 @@
     </div>
 
     <script>
-        function myFunction() {
-            var x = document.getElementById("myTopnav");
-            if (x.className === "topnav") {
-                x.className += " responsive";
-            } else {
-                x.className = "topnav";
-            }
-        }
 
         function formatDate(date) {
             const options = { month: 'long', day: 'numeric' };

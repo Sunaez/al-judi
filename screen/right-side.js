@@ -19,7 +19,7 @@ function rotateContent() {
 
         // Show the next div
         rotatingDivs[currentIndex].style.display = 'block';
-    }, 45 * 1000); // Rotate every x (* 1000) seconds
+    }, 30 * 1000); // Rotate every x (* 1000) seconds
 }
 
 // Initialize the rotation functionality

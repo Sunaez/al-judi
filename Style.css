@@ -33,6 +33,8 @@ body {
     overflow-y: auto;
 }
 
+
+
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -47,7 +49,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background-color: var(--accent-light);
+    background-color: var(--background-light);
 }
 
 .topnav {
@@ -70,50 +72,25 @@ body {
     text-decoration: none;
     font-size: 17px;
     transition: var(--tran-02);
+    border-left: solid 1px var(--accent-light);
+    border-right: solid 1px var(--accent-light);
+    box-sizing:content-box;
 }
 
 .topnav a:hover {
     background-color: var(--secondary-light);
-    color: black;
+    color: var(--text-light);
 }
 
 .topnav a.active {
     background-color: var(--primary-light);
-    color: rgb(0, 0, 0);
+    color: var(--text-light)
 }
 
 .topnav .icon {
     display: none;
 }
 
-@media screen and (max-width: 600px) {
-    .topnav a:not(:first-child) {
-        display: none;
-    }
-
-    .topnav a.icon {
-        float: right;
-        display: block;
-    }
-}
-
-@media screen and (max-width: 600px) {
-    .topnav.responsive {
-        position: relative;
-    }
-
-    .topnav.responsive .icon {
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-
-    .topnav.responsive a {
-        float: none;
-        display: block;
-        text-align: left;
-    }
-}
 
 /* Additional styles for the menuitems */
 .menuitems {
@@ -159,6 +136,7 @@ body {
     padding: 10px;
     font-size: min(23px,5vw);
 }
+
 .content {
     flex: 1;
     order: 2;
@@ -167,6 +145,8 @@ body {
     flex-direction: column;
     align-content: center;
     justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 ul {
@@ -184,21 +164,46 @@ li {
 }
 
 li a{
-    text-decoration:none;
+    text-decoration:underline;
     color: var(--text-light);
     transition: var(--tran-02);
 }
 li a:hover {
     color: var(--primary-light);
 }
+li a:visited {
+    color: var(--primary-light);
+}
+
+.welcoming {
+    width: 60%;
+    height: 15vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+}
+.welcome,.welcome-kurdish {
+    font-size: min(30px,5vw);
+
+}
 
 .prayertable {
     flex: 1;
     order: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 .dontation-info {
     flex: 1;
     order: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: min(20px,4vw);;
 }
 @media (min-width: 768px) {
     .main-content {
@@ -208,6 +213,7 @@ li a:hover {
         gap: 20px;
         /* Adjust the gap as needed */
         width: 100%;
+        align-items: start;
     }
 
     .content {
@@ -216,6 +222,9 @@ li a:hover {
 
     .dontation-info {
         grid-column: 2 / 2;
+    }
+    .welcoming {
+        height: 10vh;
     }
 }
 
@@ -267,6 +276,21 @@ li a:hover {
     text-align: center; /* Center headers and cells */
 }
 
+.download-button {
+    background-color: var(--primary-light);
+    color: var(--text-light);
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* Optional: Add hover effect using secondary-light and accent-light */
+.download-button:hover {
+    background-color: var(--secondary-light); /* Replace with your secondary light color */
+}
+
 
 
 .Screen-item {
@@ -275,4 +299,16 @@ li a:hover {
     width: 250px;
     text-decoration: none;
     width: fit-content;
+}
+
+.explore {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+.bismillah {
+    text-align: center;
+    font-size: min(20px,3.5vw);
 }
