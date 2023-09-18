@@ -53,6 +53,7 @@ body {
 }
 
 .topnav {
+    width: 100%;
     overflow: hidden;
     background-image: url('bg.jpg');
     /* Set background image */
