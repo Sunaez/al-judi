@@ -295,11 +295,14 @@ li a:visited {
 
 
 .Screen-item {
-    background-color: var(--accent-dark);
     border-radius: 10px;
-    width: 250px;
+    width: 0px;
+    height: 0px;
     text-decoration: none;
     width: fit-content;
+}
+.Screen-item a {
+    display: none;
 }
 
 .explore {
@@ -311,5 +314,5 @@ li a:visited {
 
 .bismillah {
     text-align: center;
-    font-size: min(20px,3.5vw);
+    font-size: min(40px,4.5vw);
 }
