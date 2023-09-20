@@ -195,6 +195,7 @@ li a:visited {
 }
 
 .dontation-info {
+    width: 90%;
     flex: 1;
     order: 3;
     display: flex;
@@ -341,6 +342,9 @@ iframe {
         gap: 20px;
         width: 100%;
         align-items: start;
+    }
+    .dontation-info {
+        width: max(350px,50vw);
     }
     .welcoming {
         padding: 40px;
