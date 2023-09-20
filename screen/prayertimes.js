@@ -6,7 +6,7 @@ function getCurrentMonthCSV() {
     return csvFileName;
 }
 
-fetch(`../${getCurrentMonthCSV()}`) // Assuming the CSV files are in the parent directory
+fetch(`${getCurrentMonthCSV()}`) // Assuming the CSV files are in the parent directory
     .then(response => response.text())
     .then(csvContents => {
         filterByToday(csvContents);
@@ -85,31 +85,38 @@ function filterByToday(csv) {
             }
         }
 
+
+        const prayerTime = nextPrayer.time.split(':');
+        const prayerHour = parseInt(prayerTime[0]);
+        const prayerMinute = parseInt(prayerTime[1]);
+        const MinutesLeft = ((prayerHour - currentHour) * 60 + prayerMinute - currentMinute);
+
+        const prayername = nextPrayer.name;
+        const countdownElement = document.getElementById('countdownDiv');
+        const urgentOverlay = document.getElementById('urgent');
+        const prayerIP = document.getElementById('prayerInProgressDiv');
+
+        console.log(MinutesLeft)
         if (nextPrayer) {
-            const prayerTime = nextPrayer.time.split(':');
-            const prayerHour = parseInt(prayerTime[0]);
-            const prayerMinute = parseInt(prayerTime[1]);
-            const MinutesLeft = ((prayerHour - currentHour) * 60 + prayerMinute - currentMinute);
-
-            const prayername = nextPrayer.name;
-            const countdownElement = document.getElementById('countdownDiv');
-            const urgentOverlay = document.getElementById('urgent');
-            const prayerIP = document.getElementById('prayerInProgressDiv');
-
-            if (MinutesLeft > 1) {
-                // Check if wasPrayer is true
-                if (wasPrayer) {
-                    // Show the urgent overlay and prayer in progress
-                    urgentOverlay.style.display = 'block';
-                    prayerIP.style.display = 'block';
-                    countdownElement.style.display = 'none';
-                } else {
-                    urgentOverlay.style.display = 'none';
-                    prayerIP.style.display = 'none';
-                    countdownElement.style.display = 'none';
-                }
+            if (MinutesLeft < 1) {
+                setInterval(() => {
+                    if (wasPrayer) {
+                        console.log('MinutesLeft > 1: wasPrayer is true');
+                        // Show the urgent overlay and prayer in progress
+                        urgentOverlay.style.display = 'block';
+                        prayerIP.style.display = 'block';
+                        countdownElement.style.display = 'none';
+                    }
+                    if (!wasPrayer) {
+                        console.log('MinutesLeft > 1: wasPrayer is false');
+                        urgentOverlay.style.display = 'none';
+                        prayerIP.style.display = 'none';
+                        countdownElement.style.display = 'none';
+                    }
+                }, 1000);
             }
             if (MinutesLeft === 1) {
+                console.log('MinutesLeft === 1');
                 urgentOverlay.style.display = 'block';
                 prayerIP.style.display = 'none';
                 countdownElement.style.display = 'block';
@@ -121,19 +128,30 @@ function filterByToday(csv) {
                     countdownElement.textContent = `${secondsRemaining} seconds until ${nextPrayer.name}`;
                     prayerIP.textContent = `Current prayer: ${prayername}`;
                 }, 1000);
-            }
-            if (MinutesLeft === 0) {
-                // Run setWasPrayerTrueForTenMinutes function every second
-                setInterval(() => {
-                    setWasPrayerTrueForTenMinutes();
-                }, 1000);
+            } else if (MinutesLeft === 0) {
+                console.log('MinutesLeft === 0');
+                // Run setWasPrayerTrueForTenMinutes function
+                setWasPrayerTrueForTenMinutes();
                 // Show the urgent overlay and prayer in progress
                 urgentOverlay.style.display = 'block';
                 prayerIP.style.display = 'block';
                 countdownElement.style.display = 'none';
             }
-
-        }
+        } 
+        if (nextPrayer === null) {
+            if (wasPrayer) {
+                console.log(' wasPrayer is true');
+                // Show the urgent overlay and prayer in progress
+                urgentOverlay.style.display = 'block';
+                prayerIP.style.display = 'block';
+                countdownElement.style.display = 'none';
+            } else {
+                console.log(' wasPrayer is false');
+                urgentOverlay.style.display = 'none';
+                prayerIP.style.display = 'none';
+                countdownElement.style.display = 'none';
+            }
+        } 
     }
 }
 function onMinuteChange(callback) {
@@ -143,6 +161,7 @@ function onMinuteChange(callback) {
         const currentMinute = new Date().getMinutes(); // Get the current minute
 
         if (currentMinute !== previousMinute) {
+            console.log(`Minute changed: Previous Minute: ${previousMinute}, Current Minute: ${currentMinute}`);
             // Minute has changed, call the callback function
             callback();
 
@@ -151,7 +170,9 @@ function onMinuteChange(callback) {
         }
     }, 1000); // Check every second
 }
+
 onMinuteChange(() => {
+    console.log('Running updateCountdown at the start.');
     // Run the updateCountdown function each time there's a new minute
     updateCountdown();
 });
@@ -162,15 +183,27 @@ let wasPrayer = false;
 
 function setWasPrayerTrueForTenMinutes() {
     wasPrayer = true;
-    // Set a timer to set wasPrayer back to false after 10 minutes
-    setTimeout(function () {
-        wasPrayer = false;
-    }, 10 * 60 * 1000); // 10 minutes
+
+    let secondsLeft = 3 * 60; // Initial seconds left
+
+    // Set a timer to set wasPrayer back to false after 3 minutes
+    const timer = setInterval(function () {
+        secondsLeft -= 1; // Decrement the seconds left
+        console.log(`Seconds left until wasPrayer is set to false: ${secondsLeft}`);
+
+        if (secondsLeft <= 0) {
+            wasPrayer = false;
+            console.log('wasPrayer set to false');
+            clearInterval(timer); // Clear the timer to prevent it from running again
+        }
+    }, 1000); // Check every second
 }
 
 
+
+
 function updateCountdown() {
-    fetch(`../${getCurrentMonthCSV()}`)
+    fetch(`${getCurrentMonthCSV()}`)
         .then(response => response.text())
         .then(csvContents => {
             filterByToday(csvContents);
