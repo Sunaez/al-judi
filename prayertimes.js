@@ -5,7 +5,7 @@ function getCurrentMonthCSV() {
     const csvFileName = `times_${mm}.${yyyy}.csv`;
     return csvFileName;
 }
-fetch(`../${getCurrentMonthCSV()}`) // Assuming the CSV files are in the parent directory
+fetch(`${getCurrentMonthCSV()}`) // Assuming the CSV files are in the parent directory
     .then(response => response.text())
     .then(csvContents => {
         filterByToday(csvContents);
@@ -90,7 +90,7 @@ function filterByToday(csv) {
 }
 
 function updateCountdown() {
-    fetch(`../${getCurrentMonthCSV()}`)
+    fetch(`${getCurrentMonthCSV()}`)
         .then(response => response.text())
         .then(csvContents => {
             filterByToday(csvContents);
