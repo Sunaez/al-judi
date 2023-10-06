@@ -214,7 +214,16 @@ p {
   justify-content: center;
   align-items: center;
 }
-
+.countdown-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  justify-content: center;
+}
+.phones {
+  margin: 10vh;
+  font-size: 4vw;
+}
 .details {
   padding-top: 10px;
   width: 100%;
