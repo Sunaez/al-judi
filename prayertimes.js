@@ -60,6 +60,7 @@ function filterByToday(csv) {
         document.getElementById('AsrJamaatTime').textContent = rowData[6];  // Asr Jamaat
         document.getElementById('MaghribTime').textContent = rowData[7]; // Maghrib (Regular time)
         document.getElementById('IshaTime').textContent = rowData[8];  // Isha (Regular time)
+        document.getElementById('IshaJamaatTime').textContent = rowData[9]; //Isha Jamaat
 
         // Calculate time until next prayer
         const currentHour = today.getHours();
@@ -69,7 +70,8 @@ function filterByToday(csv) {
             { time: rowData[4], name: 'Dhuhr Jamaat' },
             { time: rowData[6], name: 'Asr Jamaat' },
             { time: rowData[7], name: 'Maghrib' },
-            { time: rowData[8], name: 'Isha' }
+            { time: rowData[8], name: 'Isha' },
+            {time: rowData[9], name: 'Isha Jamaat'}
         ];
 
         let nextPrayer = null;
