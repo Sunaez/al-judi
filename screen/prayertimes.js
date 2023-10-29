@@ -57,17 +57,17 @@ function filterByToday(csv) {
         document.getElementById('DhuhrTime').textContent = rowData[4]; // Dhuhr Jamaat
         document.getElementById('AsrTime').textContent = rowData[6];  // Asr Jamaat
         document.getElementById('MaghribTime').textContent = rowData[7]; // Maghrib (Regular time)
-        document.getElementById('IshaTime').textContent = rowData[8];  // Isha (Regular time)
+        document.getElementById('IshaTime').textContent = rowData[9];  // Isha (Regular time)
 
         // Calculate time until next prayer
         const currentHour = today.getHours();
         const currentMinute = today.getMinutes();
         const nextPrayerTimes = [
-            { time: rowData[2], name: 'Fajr Jamaat' },
-            { time: rowData[4], name: 'Dhuhr Jamaat' },
-            { time: rowData[6], name: 'Asr Jamaat' },
+            { time: rowData[2], name: 'Fajr' },
+            { time: rowData[4], name: 'Dhuhr' },
+            { time: rowData[6], name: 'Asr' },
             { time: rowData[7], name: 'Maghrib' },
-            { time: rowData[8], name: 'Isha' }
+            { time: rowData[9], name: 'Isha' }
         ];
 
         let nextPrayer = null;
