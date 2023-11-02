@@ -149,6 +149,7 @@ p {
   font-weight: 600;
   word-break: break-all;
   direction: rtl;
+  text-align:right;
 }
 
 
