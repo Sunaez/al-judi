@@ -1,7 +1,7 @@
 // Function to refresh the page
 function refreshPage() {
     // Refresh the page
-location.reload();
+location.reload(true);
 }
 
 // Set a timer to refresh the page every hour
