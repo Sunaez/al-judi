@@ -64,7 +64,7 @@ p {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url("/bg.jpg");
+  background: linear-gradient(to right, #f3ebd3 30%, #fcfceb 50%);
   box-sizing: border-box;
 }
 
