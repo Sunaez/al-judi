@@ -1,0 +1,6 @@
+Plans of features:
+Streamline the css styling of the TV screen to still have the same style but use less lines
+for the website and TV screen implement:
+    dark mode from maghrib to fajr 
+    light mode from fajr to maghrib
+

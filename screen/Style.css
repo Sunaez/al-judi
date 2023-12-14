@@ -3,7 +3,7 @@
 
 :root {
   --background-color: #ffeac5;
-  --sidebar-color: #191A1F;
+  --background-color-invert: #00153a;
   --primary-color: #3A5A40;
   --primary-color-light: #588157;
   --toggle-color: #707d89;
@@ -22,11 +22,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-html {
-  padding: 0;
-  margin: 0;
 }
 
 body {
@@ -64,7 +59,9 @@ p {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(to right, #f3ebd3 30%, #fcfceb 50%);
+  background:
+    url('bg.jpg'),
+    linear-gradient(to right, #f3ebd3 30%, #fcfceb 50%);
   box-sizing: border-box;
 }
 
@@ -143,13 +140,17 @@ p {
   text-align: center;
 }
 
+.jummah {
+  font-size: 3vw;
+}
+
 .salaam,
 .verse {
   font-family: 'Uthmanic Script', sans-serif;
   font-weight: 600;
   word-break: break-all;
   direction: rtl;
-  text-align:right;
+  text-align: right;
 }
 
 
@@ -173,7 +174,7 @@ p {
 
 .translation {
   padding: 10px;
-  font-size: 2.7vw;
+  font-size: 2.5vw;
   font-weight: 600;
   word-break: break-word;
 }
@@ -194,7 +195,7 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--sidebar-color);
+  background-color: var(--background-color-invert);
   /* Light yellow-orange background with some transparency */
   color: var(--text-color-invert);
   /* Black text color */
@@ -215,16 +216,19 @@ p {
   justify-content: center;
   align-items: center;
 }
+
 .countdown-text {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   justify-content: center;
 }
+
 .phones {
   margin: 10vh;
   font-size: 4vw;
 }
+
 .details {
   padding-top: 10px;
   width: 100%;
@@ -238,6 +242,7 @@ p {
   justify-content: flex-start;
   padding: 10px;
 }
+
 .acc {
   font-size: 2.5vw;
   font-weight: 600;
@@ -363,6 +368,31 @@ table tr td:first-child {
   overflow: hidden;
 }
 
-.jummah {
-  font-size: 3vw;
+.Jumma-Content {
+  width: 100%;
+  height: 100%;
+}
+
+.jumma-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.english {
+  display: flex;
+  flex-direction: row;
+  font-size: 4vw;
+}
+
+.kurdish {
+  display: flex;
+  flex-direction: row;
+  font-size: 4vw;
+}
+
+.urgency {
+  color: #3A5A40;
+  font-weight: bold;
 }

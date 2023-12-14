@@ -92,7 +92,7 @@ function writeIslamicDate(adjustment) {
 	"Ramadan","Shawwal","Dhul Qa'ada","Dhul Hijja");
 	var iDate = kuwaiticalendar(adjustment);
 	var outputIslamicDate = wdNames[iDate[4]] +
-	+ iDate[5] + " " + iMonthNames[iDate[6]] + " " + iDate[7] + " AH";
+	+ iDate[5] + " " + iMonthNames[iDate[6]] + " " + iDate[7];
 	return outputIslamicDate;
 }
 
