@@ -1,14 +1,10 @@
 function getCurrentMonthCSV() {
-    const today = new Date();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
-    const csvFileName = `times_${mm}.${yyyy}.csv`;
-    return csvFileName;
+    return 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQfoFEcprp-CYQjw40GrjdNWToUSvv10TjQzpw30vPkpLdwLz5NSeKKhNlsseeAkWR5wBAZLnzNpDcq/pub?output=csv';
 }
 
 async function fetchCSV() {
     try {
-        const response = await fetch(`/${getCurrentMonthCSV()}`);
+        const response = await fetch(getCurrentMonthCSV());
         if (!response.ok) {
             throw new Error(`Failed to fetch CSV file (${response.status} ${response.statusText})`);
         }
@@ -34,13 +30,13 @@ function updatePrayerTimes(csv) {
 
         document.getElementById('FajrStartTime').textContent = rowData[1];
         document.getElementById('FajrJamaatTime').textContent = rowData[2];
-        document.getElementById('DhuhrStartTime').textContent = rowData[3];
-        document.getElementById('DhuhrJamaatTime').textContent = rowData[4];
-        document.getElementById('AsrStartTime').textContent = rowData[5];
-        document.getElementById('AsrJamaatTime').textContent = rowData[6];
-        document.getElementById('MaghribTime').textContent = rowData[7];
-        document.getElementById('IshaTime').textContent = rowData[8];
-        document.getElementById('IshaJamaatTime').textContent = rowData[9];
+        document.getElementById('DhuhrStartTime').textContent = rowData[4];
+        document.getElementById('DhuhrJamaatTime').textContent = rowData[5];
+        document.getElementById('AsrStartTime').textContent = rowData[6];
+        document.getElementById('AsrJamaatTime').textContent = rowData[7];
+        document.getElementById('MaghribTime').textContent = rowData[8];
+        document.getElementById('IshaTime').textContent = rowData[9];
+        document.getElementById('IshaJamaatTime').textContent = rowData[10];
     }
 }
 
@@ -55,4 +51,5 @@ async function loadPrayerTimes() {
     }
 }
 
+// Initial call to loadPrayerTimes
 loadPrayerTimes();

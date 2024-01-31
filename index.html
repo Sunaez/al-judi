@@ -5,206 +5,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Al-judi Masjid</title>
-    <link rel="stylesheet" href="Style2.css">
+    <link rel="stylesheet" href="Style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href="img.png">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        /* Custom CSS for smooth animation */
-        #mobile-menu {
-            display: none;
-            opacity: 0;
-            transition: all 0.3s ease-in-out;
-        }
-
-        #mobile-menu.active {
-            transition: all 0.3s ease-in-out;
-            display: block;
-            opacity: 1;
-        }
-
-        .datetime-container {
-            display: flex;
-            flex-direction: row-reverse;
-            align-items: center;
-            justify-content: space-around;
-            flex-wrap: nowrap;
-        }
-        body {
-            background-color: #f9f6f0;
-        }
-    </style>
 </head>
 
 <body>
     <!-- Nav Start -->
-    <div class="container mx-auto">
-        <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
-            <div class="max-w-screen-xl flex items-center justify-between mx-auto px-4 py-2.5">
-                <a href="index.html" class="text-2xl font-bold text-yellow-800">Al-judi Masjid</a>
-                <button id="mobile-menu-btn"
-                    class="inline-flex items-center p-2 ms-3 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                    aria-controls="navbar-dropdown" aria-expanded="false">
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 17 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M1 1h15M1 7h15M1 13h15" />
-                    </svg>
-                </button>
-                <ul class="hidden lg:flex space-x-4">
-                    <li><a href="links.html" class="text-gray-600 hover:text-yellow-600">Links</a></li>
-                    <li><a href="services.html" class="text-gray-600 hover:text-yellow-600">Services</a></li>
-                    <!-- Removed the 'Contact' link -->
-                    <li><a href="explore.html" class="text-gray-600 hover:text-yellow-600">Explore</a></li>
-                </ul>
-            </div>
-            <!-- Mobile Menu -->
-            <div id="mobile-menu"
-                class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-700 transition duration-300 ease-in-out opacity-0">
-                <ul class="py-2">
-                    <li><a href="links.html" class="block px-4 py-2 text-gray-600 hover:text-yellow-600">Links</a></li>
-                    <li><a href="services.html" class="block px-4 py-2 text-gray-600 hover:text-yellow-600">Services</a>
-                    </li>
-                    <!-- Removed the 'Contact' link -->
-                    <li><a href="explore.html" class="block px-4 py-2 text-gray-600 hover:text-yellow-600">Explore</a></li>
-                </ul>
-            </div>
-        </nav>
+    <div class="topnav" id="myTopnav">
+        <a href="index.html" class="active">Al-judi Masjid</a>
+        <a href="links.html">Links</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="explore.html">Explore</a>
     </div>
     <!-- Nav End -->
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-5">
+    <div class="main-content">
 
         <!-- Welcome Message Start -->
-        <div class="lg:col-span-2 bg-white p-4 rounded shadow grid grid-cols-2 items-center">
-            <div class="flex flex-col items-center">
-                <p class="text-xl font-bold mb-4">Welcome to Al-judi Masjid</p>
-                <a href="https://www.youtube.com/your-youtube-channel" class="text-yellow-600 hover:underline">YouTube</a>
-            </div>
-            <div class="flex flex-col items-center text-center">
-                <p class="text-xl font-bold mb-4">
+        <div class="content">
+            <div class="welcoming">
+                <div class="welcome">
+                    Welcome to Al-judi Masjid
+                </div>
+                <div class="welcome-kurdish">
                     بەخێر بێن بۆ مزگەوتی جودی
-                </p>
-                <a href="https://www.facebook.com/your-facebook-page" class="text-yellow-600 hover:underline">Facebook</a>
+                </div>
+                <!-- Add youtube and facebook -->
             </div>
-            
+            <!-- <div class="dontation-info">
+                Please support the Masjid by donating generously
+                <p>Name: Sandwell and Birmingham kurdish Community</p>
+                <p>Acc. No: 33988449</p>
+                <p>Sort-code: 20-09-03</p>
+            </div> -->
         </div>
         <!-- Welcome Message End -->
 
         <!-- Prayer Times Start -->
-        <div class="bg-white p-4 rounded shadow">
-            <div class="text-xl font-bold mb-4">Daily Prayer Times</div>
-            <div class="mt-4">
-                <div class="datetime-container">
-                    <div class="date text-gray-600">
-                        <span id="date"></span>
-                    </div>
-                    <div class="time text-gray-800">
-                        <span id="time"></span>
-                    </div>
-                </div>
-                <table class="w-full">
-                    <thead>
-                        <tr>
-                            <th style="width: 33.33%;"></th>
-                            <th style="width: 33.33%;">Start</th>
-                            <th style="width: 33.33%;">Jama'at</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-b">
-                            <td style="display: flex; justify-content: space-between; align-items: center;">
-                                Fajr <img
-                                    src="https://greenlanemasjid.org/wp-content/plugins/glm-prayer-times/icon-fajr.svg"
-                                    alt="Fajr Icon" style="width: 30px; height: 30px;">
-                            </td>
-                            <td id="FajrStartTime" style="text-align: center;"></td>
-                            <td id="FajrJamaatTime" style="text-align: center;"></td>
-                        </tr>
-                        <tr class="border-b">
-                            <td style="display: flex; justify-content: space-between; align-items: center;">
-                                Dhuhr <img
-                                    src="https://greenlanemasjid.org/wp-content/plugins/glm-prayer-times/icon-dhuhr.svg"
-                                    alt="Dhuhr Icon" style="width: 30px; height: 30px;">
-                            </td>
-                            <td id="DhuhrStartTime" style="text-align: center;"></td>
-                            <td id="DhuhrJamaatTime" style="text-align: center;"></td>
-                        </tr>
-                        <tr class="border-b">
-                            <td style="display: flex; justify-content: space-between; align-items: center;">
-                                Asr <img
-                                    src="https://greenlanemasjid.org/wp-content/plugins/glm-prayer-times/icon-asr.svg"
-                                    alt="Asr Icon" style="width: 30px; height: 30px;">
-                            </td>
-                            <td id="AsrStartTime" style="text-align: center;"></td>
-                            <td id="AsrJamaatTime" style="text-align: center;"></td>
-                        </tr>
-                        <tr class="border-b">
-                            <td style="display: flex; justify-content: space-between; align-items: center;">
-                                Maghrib <img
-                                    src="https://greenlanemasjid.org/wp-content/plugins/glm-prayer-times/icon-maghrib.svg"
-                                    alt="Maghrib Icon" style="width: 30px; height: 30px;">
-                            </td>
-                            <td id="MaghribTime" colspan="2" style="text-align: center;"></td>
-                        </tr>
-                        <tr class="border-b">
-                            <td style="display: flex; justify-content: space-between; align-items: center;">
-                                Isha <img
-                                    src="https://greenlanemasjid.org/wp-content/plugins/glm-prayer-times/icon-isha.svg"
-                                    alt="Isha Icon" style="width: 30px; height: 30px;">
-                            </td>
-                            <td id="IshaTime" style="text-align: center;"></td>
-                            <td id="IshaJamaatTime" style="text-align: center;"></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="prayertable">
 
-
-
+            <div class="date-time">
+                <p id="date"></p>
+                <p id="time"></p>
             </div>
-            <div class="mt-4">
-                <a href="012024.JPG" download
-                    class="block w-full py-2 px-4 bg-yellow-800 text-white rounded text-center">
-                    <i class='bx bxs-download'></i> Download January timetable
+            <div class="jummah">
+                <header>Jummah Time is at 12:45</header>
+            </div>
+            <div class="prayertimes">
+                <table class="Table">
+                    <tr>
+                        <th></th>
+                        <th>Start</th>
+                        <th>Jama'at</th>
+                    </tr>
+
+                    <tr class="Fajr">
+                        <td>Fajr</td>
+                        <td id="FajrStartTime"></td>
+                        <td id="FajrJamaatTime"></td>
+                    </tr>
+
+                    <tr class="Dhuhr">
+                        <td>Dhuhr</td>
+                        <td id="DhuhrStartTime"></td>
+                        <td id="DhuhrJamaatTime"></td>
+                    </tr>
+
+                    <tr class="Asr">
+                        <td>Asr</td>
+                        <td id="AsrStartTime"></td>
+                        <td id="AsrJamaatTime"></td>
+                    </tr>
+
+                    <tr class="Maghrib">
+                        <td>Maghrib</td>
+                        <td id="MaghribTime" colspan="2"></td>
+                    </tr>
+
+                    <tr class="Isha">
+                        <td>Isha</td>
+                        <td id="IshaTime"></td>
+                        <td id="IshaJamaatTime"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="download">
+                <a href="feb2024.jpg" download class="download-button">
+                    <i class='bx bxs-download'></i>
+                    Download February timetable
                 </a>
             </div>
         </div>
         <!-- Prayer Times End -->
 
         <!-- Contact Section Start -->
-            <div class="bg-white shadow-md rounded px-8 py-6">
-                <header class="text-xl mb-4">Please do not hesitate to call or email us about anything</header>
-                
-                <div class="grid grid-cols-1 gap-y-4">
-                    <ul>
-                        <header class="font-bold text-lg mb-2">Phone number</header>
-                        <li>Questions about sharia: 07734155096</li>
-                    </ul>
-                    
-                    <ul>
-                        <header class="font-bold text-lg mb-2">Emails</header>
-                        <li>Regarding mosque: judi@muslim.com</li>
-                        <li>Regarding website / TV screen: alanddazad4@gmail.com</li>
-                    </ul>
-                </div>
-            </div>
+        <!-- <div class="content2">
+            <header>Please do not hesisitate to call or email us about anything</header>
+            <ul>
+                <header>Phone number</header>
+                <li>Questions about sharia: 07734155096</li>
+            </ul>
+            <ul>
+                <header>Emails</header>
+                <li>Regarding mosque: judi@muslim.com</li>
+                <li>Regarding website / TV screen: alanddazad4@gmail.com</li>
+            </ul>
+        </div> -->
         <!-- Contact Section End -->
 
         <!-- Location Section Start -->
-        <div class="container mx-auto py-8">
+        <!-- <div class="container mx-auto py-8">
             <div class="bg-white shadow-md rounded px-8 py-6">
                 <h2 class="text-2xl font-bold mb-4">Where we are</h2>
                 <p class="text-gray-700">298 Dudley Rd <br> Birmingham B18 4HL <br> United Kingdom</p>
-            <div class="mt-4">
-                <a href="https://maps.app.goo.gl/SZSGQm3SkTjv1yNz8"
-                    class="block w-full py-2 px-4 bg-yellow-800 text-white rounded text-center">
-                    <i class='bx bxs-download'></i> View on Google Maps
-                </a>
+                <div class="mt-4">
+                    <a href="https://maps.app.goo.gl/SZSGQm3SkTjv1yNz8"
+                        class="block w-full py-2 px-4 bg-yellow-800 text-white rounded text-center">
+                        <i class='bx bxs-download'></i> View on Google Maps
+                    </a>
+                </div>
             </div>
-        </div>
-
-        </div>
+        </div> -->
         <!-- Location Section End -->
 
     </div>
@@ -238,15 +162,6 @@
         updateDateTime();
     </script>
     <script src="prayertimes.js"></script>
-    <script>
-        // Toggle mobile menu visibility
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('active');
-        });
-    </script>
 </body>
 
 </html>

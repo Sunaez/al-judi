@@ -1,9 +1,5 @@
 function getCurrentMonthCSV() {
-    const today = new Date();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-    const yyyy = today.getFullYear();
-    const csvFileName = `times_${mm}.${yyyy}.csv`;
-    return csvFileName;
+    return 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQfoFEcprp-CYQjw40GrjdNWToUSvv10TjQzpw30vPkpLdwLz5NSeKKhNlsseeAkWR5wBAZLnzNpDcq/pub?output=csv';
 }
 
 fetch(`${getCurrentMonthCSV()}`) // Assuming the CSV files are in the parent directory
@@ -54,20 +50,20 @@ function filterByToday(csv) {
     if (matchingRow) {
         const rowData = matchingRow.split(',');
         document.getElementById('FajrTime').textContent = rowData[2]; // Fajr Jamaat
-        document.getElementById('DhuhrTime').textContent = rowData[4]; // Dhuhr Jamaat
-        document.getElementById('AsrTime').textContent = rowData[6];  // Asr Jamaat
-        document.getElementById('MaghribTime').textContent = rowData[7]; // Maghrib (Regular time)
-        document.getElementById('IshaTime').textContent = rowData[9];  // Isha (Regular time)
+        document.getElementById('DhuhrTime').textContent = rowData[5]; // Dhuhr Jamaat
+        document.getElementById('AsrTime').textContent = rowData[7];  // Asr Jamaat
+        document.getElementById('MaghribTime').textContent = rowData[8]; // Maghrib (Regular time)
+        document.getElementById('IshaTime').textContent = rowData[10];  // Isha (Regular time)
 
         // Calculate time until next prayer
         const currentHour = today.getHours();
         const currentMinute = today.getMinutes();
         const nextPrayerTimes = [
             { time: rowData[2], name: 'Fajr' },
-            { time: rowData[4], name: 'Dhuhr' },
-            { time: rowData[6], name: 'Asr' },
-            { time: rowData[7], name: 'Maghrib' },
-            { time: rowData[9], name: 'Isha' }
+            { time: rowData[5], name: 'Dhuhr' },
+            { time: rowData[7], name: 'Asr' },
+            { time: rowData[8], name: 'Maghrib' },
+            { time: rowData[10], name: 'Isha' }
         ];
 
         let nextPrayer = null;
@@ -137,7 +133,7 @@ function filterByToday(csv) {
                 prayerIP.style.display = 'block';
                 countdownElement.style.display = 'none';
             }
-        } 
+        }
         if (nextPrayer === null) {
             if (wasPrayer) {
                 console.log(' wasPrayer is true');
@@ -151,7 +147,7 @@ function filterByToday(csv) {
                 prayerIP.style.display = 'none';
                 countdownElement.style.display = 'none';
             }
-        } 
+        }
     }
 }
 function onMinuteChange(callback) {
@@ -199,11 +195,8 @@ function setWasPrayerTrueForTenMinutes() {
     }, 1000); // Check every second
 }
 
-
-
-
 function updateCountdown() {
-    fetch(`${getCurrentMonthCSV()}`)
+    fetch(getCurrentMonthCSV())
         .then(response => response.text())
         .then(csvContents => {
             filterByToday(csvContents);
@@ -212,7 +205,6 @@ function updateCountdown() {
             console.error('Error fetching or parsing CSV:', error);
         });
 }
-
 
 // Initial call to updateCountdown
 updateCountdown();
