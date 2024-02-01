@@ -1,31 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 :root {
-    --accent-dark: #6a7585;
-    --accent-light: #262a30;
-    --background-dark: #070604;
-    --background-light: #f9f6f0;
-    --primary-dark: #4e3a13;
-    --primary-light: #b09c73;
-    --secondary-dark: #181107;
-    --secondary-light: #eedfc9;
-    --text-dark: #f9f6f0;
-    --text-light: #070604;
-
     --tran-02: all 0.2s ease-in-out;
     --tran-03: all 0.3s ease-in-out;
     --tran-04: all 0.4s ease-in-out;
     --tran-05: all 0.5s ease-in-out;
 }
 
+:root[data-theme="light"] {
+    --text: #060504;
+    --background: #f9f6f0;
+    --primary: #b09c73;
+    --secondary: #eedfc9;
+    --accent: #262b31;
+  }
+  :root[data-theme="dark"] {
+    --accent: #d9d5cf;
+    --background: #060909;
+    --primary: #4f638c;
+    --secondary: #112036;
+    --text: #f8f9fb;
+    
+  }
+
 * {
     font-family: 'Poppins', sans-serif;
     padding: 0;
     margin: 0;
+    color: var(--text);
 }
 
 body {
-    background-color: var(--background-light);
+    background-color: var(--background);
     width: 100vw;
     height: 100vh;
     overflow-x: hidden;
@@ -37,16 +43,16 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: var(--accent-light);
+    background-color: var(--accent);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--text-light);
+    background-color: var(--text);
 }
 
 ::-webkit-scrollbar-track {
-    background-color: var(--background-light);
+    background-color: var(--background);
 }
 
 .topnav {
@@ -61,25 +67,25 @@ body {
 .topnav a {
     float: left;
     display: block;
-    color: var(--text-light);
+    color: var(--text);
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
     transition: var(--tran-02);
-    border-left: solid 1px var(--accent-light);
-    border-right: solid 1px var(--accent-light);
+    border-left: solid 1px var(--accent);
+    border-right: solid 1px var(--accent);
     box-sizing: content-box;
 }
 
 .topnav a:hover {
-    background-color: var(--secondary-light);
-    color: var(--text-light);
+    background-color: var(--secondary);
+    color: var(--text);
 }
 
 .topnav a.active {
-    background-color: var(--primary-light);
-    color: var(--text-light);
+    background-color: var(--primary);
+    color: var(--text);
 }
 
 .topnav .icon {
@@ -110,7 +116,7 @@ body {
 }
 
 .bx {
-    color: var(--text-light);
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -154,21 +160,21 @@ ul header {
 li {
     padding: 10px;
     font-size: min(20px, 4vw);
-    background-color: var(--secondary-light);
+    background-color: var(--secondary);
 }
 
 li a {
     text-decoration: underline;
-    color: var(--text-light);
+    color: var(--text);
     transition: var(--tran-02);
 }
 
 li a:hover {
-    color: var(--primary-light);
+    color: var(--primary);
 }
 
 li a:visited {
-    color: var(--primary-light);
+    color: var(--primary);
 }
 
 .welcoming {
@@ -182,6 +188,7 @@ li a:visited {
 .welcome,
 .welcome-kurdish {
     font-size: min(30px, 5vw);
+    color: var(--text);
 }
 
 .prayertable {
@@ -221,8 +228,9 @@ li a:visited {
 .Table th {
     font-size: 25px;
     text-align: left;
-    color: var(--text-light);
-    border-bottom: 2px solid var(--primary-light); /* Change border color to primary-light for headers */
+    color: var(--text);
+    border-bottom: 2px solid var(--primary);
+    /* Change border color to primary-light for headers */
     background-color: transparent;
     padding: 10px;
 }
@@ -230,9 +238,11 @@ li a:visited {
 .Table td {
     font-size: 20px;
     font-weight: 900;
-    color: var(--text-light);
-    border-top: 2px solid var(--primary-light); /* Change border color to primary-light for rows */
-    border-bottom: 2px solid var(--primary-light); /* Change border color to primary-light for rows */
+    color: var(--text);
+    border-top: 2px solid var(--primary);
+    /* Change border color to primary-light for rows */
+    border-bottom: 2px solid var(--primary);
+    /* Change border color to primary-light for rows */
     background-color: transparent;
     padding: 10px;
     text-align: left;
@@ -246,14 +256,14 @@ li a:visited {
 
 .Table td:nth-child(3),
 .Table th:nth-child(3) {
-    background-color: var(--secondary-light);
+    background-color: var(--secondary);
     text-align: center;
 }
 
 
 .download-button {
-    background-color: var(--primary-light);
-    color: var(--text-light);
+    background-color: var(--primary);
+    color: var(--text);
     padding: 5px;
     border: none;
     border-radius: 5px;
@@ -262,7 +272,7 @@ li a:visited {
 }
 
 .download-button:hover {
-    background-color: var(--secondary-light);
+    background-color: var(--secondary);
 }
 
 .Screen-item {
@@ -305,6 +315,7 @@ li a:visited {
     .prayertable {
         order: 1;
     }
+
     .prayertimes {
         width: 90%;
     }
@@ -323,7 +334,8 @@ iframe {
     padding: 15px;
     width: 90vw;
     height: 35vh;
-    }
+}
+
 /* Responsive design for PC */
 @media (min-width: 768px) {
     body {
@@ -332,10 +344,11 @@ iframe {
     }
 
     iframe {
-        width: max(350px,50vw);
+        width: max(350px, 50vw);
         height: 400px;
         padding: 10px;
     }
+
     .main-content {
         display: grid;
         grid-template-columns: 2fr 1fr;
@@ -343,9 +356,11 @@ iframe {
         width: 100%;
         align-items: start;
     }
+
     .dontation-info {
-        width: max(350px,50vw);
+        width: max(350px, 50vw);
     }
+
     .welcoming {
         padding: 40px;
     }
