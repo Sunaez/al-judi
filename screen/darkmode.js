@@ -9,9 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const rootElement = document.documentElement;
         rootElement.setAttribute('data-theme', isDaytime ? 'light' : 'dark');
 
-        // Change background image based on the time of the day
-        const backgroundImage = isDaytime ? 'bg.jpg' : 'bg-inv.jpg';
-        document.getElementsByClassName('topnav')[0].style.backgroundImage = `url(${backgroundImage})`;
     }
 
     function isDaytimeFromCSV() {

@@ -1,5 +1,5 @@
 function getCurrentMonthCSV() {
-    return 'prayer_times.csv'
+    return 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQfoFEcprp-CYQjw40GrjdNWToUSvv10TjQzpw30vPkpLdwLz5NSeKKhNlsseeAkWR5wBAZLnzNpDcq/pub?output=csv'
 }
 
 fetch(`${getCurrentMonthCSV()}`) // Assuming the CSV files are in the parent directory
