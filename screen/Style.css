@@ -2,7 +2,7 @@
 
 
 
-:root[data-theme="light"] {
+:root {
   --background-color: #ffeac5;
   --background-color-invert: #00153a;
   --primary-color: #3A5A40;
