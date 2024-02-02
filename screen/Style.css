@@ -12,17 +12,6 @@
   --text-color-invert: #dad7cd;
 }
 
-:root[data-theme="dark"] {
-  --background-color: #00153a;
-  --background-color-invert: #ffeac5;
-  --primary-color: #c5a55f;
-  --primary-color-light: #a7e8a8;
-  --toggle-color: #8f8276;
-  --text-color: #dad7cd;
-  --text-color-invert: #252832;
-
-}
-
 @font-face {
   font-family: 'Uthmanic Script';
   src: url("KFGQPC Uthmanic Script HAFS Regular.otf") format("opentype");
@@ -83,8 +72,12 @@ p {
   min-height: 100vh;
   display: flex;
   background-image: url("bg.jpg");
+  transition: filter 0.5s ease;
   flex-direction: column;
   box-sizing: border-box;
+}
+.invert-filter {
+  filter: invert(1);
 }
 
 .top {
