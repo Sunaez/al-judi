@@ -4,12 +4,8 @@
 
 :root {
   --background-color: #ffeac5;
-  --background-color-invert: #00153a;
-  --primary-color: #3A5A40;
-  --primary-color-light: #588157;
-  --toggle-color: #707d89;
+  --primary-color: #0c2010;
   --text-color: #252832;
-  --text-color-invert: #dad7cd;
 }
 
 @font-face {
@@ -212,21 +208,15 @@ p {
 /* CSS for the overlay */
 .overlay {
   display: none;
-  /* Initially hide the overlay */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--background-color-invert);
-  /* Light yellow-orange background with some transparency */
-  color: var(--text-color-invert);
-  /* Black text color */
+  background-color: var(--background-color);
   text-align: center;
   padding-top: 20%;
-  /* Adjust as needed to center the content vertically */
   z-index: 999;
-  /* Ensure the overlay is on top of other content */
 }
 
 /* CSS for the countdown text */
@@ -328,7 +318,9 @@ p {
 table tr td:first-child {
   text-align: left;
   font-family: 'Poppins-Bold', sans-serif;
-
+}
+table tr td {
+  font-family: 'Poppins-Bold', sans-serif;
 }
 
 .Table th {

@@ -31,7 +31,7 @@ function applyInvertFilter(darkModeEnabled) {
 
 // Function to determine dark mode status based on prayer times
 function determineDarkModeStatus(currentTime, maghribTime, sunriseTime) {
-    const maghribMinutes = maghribTime[0] * 60 + maghribTime[1];
+    const maghribMinutes = (maghribTime[0] * 60 + maghribTime[1]) + 3;
     const sunriseMinutes = sunriseTime[0] * 60 + sunriseTime[1];
     return !isTimeBetween(currentTime, sunriseMinutes, maghribMinutes);
 }
