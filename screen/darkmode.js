@@ -6,7 +6,7 @@ function isTimeBetween(currentTime, startTime, endTime) {
 // Function to fetch prayer times from CSV file
 async function fetchPrayerTimes() {
     try {
-        const response = await fetch('prayer_times.csv');
+        const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQfoFEcprp-CYQjw40GrjdNWToUSvv10TjQzpw30vPkpLdwLz5NSeKKhNlsseeAkWR5wBAZLnzNpDcq/pub?output=csv');
         const csvData = await response.text();
         return csvData.split('\n').map(row => row.split(','));
     } catch (error) {
