@@ -13,16 +13,16 @@
     --primary: #b09c73;
     --secondary: #eedfc9;
     --accent: #262b31;
-  }
-  :root[data-theme="dark"] {
+}
+
+:root[data-theme="dark"] {
     --accent: #d9d5cf;
     --background: #060909;
     --primary: #4f638c;
     --secondary: #112036;
     --text: #f8f9fb;
-    
-  }
 
+}
 * {
     font-family: 'Poppins', sans-serif;
     padding: 0;
@@ -273,18 +273,6 @@ li a:visited {
 
 .download-button:hover {
     background-color: var(--secondary);
-}
-
-.Screen-item {
-    border-radius: 10px;
-    width: 0px;
-    height: 0px;
-    text-decoration: none;
-    width: fit-content;
-}
-
-.Screen-item a {
-    display: none;
 }
 
 .explore {
