@@ -1,45 +1,66 @@
-// Create a new XMLHttpRequest
-var xhr = new XMLHttpRequest();
+// Function to check if the current time is between two given times
+function isTimeBetween(currentTime, startTime, endTime) {
+  return currentTime >= startTime && currentTime <= endTime;
+}
 
-// Configure it: GET-request for the URL
-xhr.open('GET', 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQfoFEcprp-CYQjw40GrjdNWToUSvv10TjQzpw30vPkpLdwLz5NSeKKhNlsseeAkWR5wBAZLnzNpDcq/pub?output=csv', false);
-
-// Send the request over the network
-xhr.send();
-
-if (xhr.status != 200) {
-  // Analyze HTTP response status
-  alert(`Error ${xhr.status}: ${xhr.statusText}`);
-} else {
-  // Show the result
-  var data = xhr.responseText;
-  var rows = data.split('\n');
-  var headers = rows[0].split(',');
-  var today = new Date();
-  var todayRows = rows.filter(function(row) {
-    var dateParts = row.split(',')[0].split('/');
-    var rowDate = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
-    return rowDate.toDateString() === today.toDateString();
-  });
-
-  if (todayRows.length > 0) {
-    var times = todayRows[0].split(',');
-    var sunriseParts = times[headers.indexOf('Sunrise')].split(':');
-    var sunrise = new Date(today.getFullYear(), today.getMonth(), today.getDate(), sunriseParts[0], sunriseParts[1]);
-    var maghribParts = times[headers.indexOf('Maghrib')].split(':');
-    var maghrib = new Date(today.getFullYear(), today.getMonth(), today.getDate(), maghribParts[0], maghribParts[1]);
-
-    var isNight = today < sunrise || today > maghrib;
-
-    document.documentElement.style.setProperty('--text', isNight ? '#f8f9fb' : '#060504');
-    document.documentElement.style.setProperty('--background', isNight ? '#060909' : '#f9f6f0');
-    document.documentElement.style.setProperty('--primary', isNight ? '#4f638c' : '#b09c73');
-    document.documentElement.style.setProperty('--secondary', isNight ? '#112036' : '#eedfc9');
-    document.documentElement.style.setProperty('--accent', isNight ? '#d9d5cf' : '#262b31');
-
-    var topnav = document.querySelector('.topnav');
-    if (topnav) {
-      topnav.style.filter = isNight ? 'invert(1)' : 'none';
-    }
+// Function to fetch prayer times from CSV file
+async function fetchPrayerTimes() {
+  try {
+      const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vQfoFEcprp-CYQjw40GrjdNWToUSvv10TjQzpw30vPkpLdwLz5NSeKKhNlsseeAkWR5wBAZLnzNpDcq/pub?output=csv');
+      const csvData = await response.text();
+      return csvData.split('\n').map(row => row.split(','));
+  } catch (error) {
+      console.error('Error fetching prayer times:', error);
+      return [];
   }
 }
+
+// Function to convert DD/MM/YYYY date to a JavaScript Date object
+function convertToDateObject(dateString) {
+  const [day, month, year] = dateString.split('/').map(Number);
+  return new Date(year, month - 1, day); // month is 0-indexed in JavaScript Date
+}
+
+// Function to apply invert filter based on dark mode status
+function applyInvertFilter(darkModeEnabled) {
+  const bodyElement = document.body;
+  if (bodyElement) {
+      bodyElement.style.filter = darkModeEnabled ? 'invert(100%)' : 'none';
+  }
+}
+
+// Function to determine dark mode status based on prayer times
+function determineDarkModeStatus(currentTime, maghribTime, sunriseTime) {
+  const maghribMinutes = (maghribTime[0] * 60 + maghribTime[1]) + 3;
+  const sunriseMinutes = sunriseTime[0] * 60 + sunriseTime[1];
+  return !isTimeBetween(currentTime, sunriseMinutes, maghribMinutes);
+}
+
+// Function to apply dark mode based on the time
+async function applyDarkMode() {
+  const now = new Date();
+  const currentDate = now.toLocaleDateString('en-GB'); // Format as DD/MM/YYYY
+
+  // Fetch and process prayer times
+  const rows = await fetchPrayerTimes();
+
+  // Find the row with the current date
+  const currentDateRow = rows.find(row => row[0] === currentDate);
+
+  if (currentDateRow && currentDateRow.length >= 9) {
+      const maghribTime = currentDateRow[8].split(':').map(Number);
+      const sunriseTime = currentDateRow[3].split(':').map(Number);
+
+      const currentTime = now.getHours() * 60 + now.getMinutes();
+      const darkModeEnabled = determineDarkModeStatus(currentTime, maghribTime, sunriseTime);
+
+      // Apply invert filter based on dark mode status
+      applyInvertFilter(darkModeEnabled);
+  }
+}
+
+// Apply dark mode on page load
+applyDarkMode();
+
+// Check every minute and update dark mode
+setInterval(applyDarkMode, 60000);
