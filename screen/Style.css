@@ -334,6 +334,10 @@ table tr td {
 .Isha {
   color: var(--text-color);
 }
+tr.Fajr td:nth-child(2),tr.Maghrib td:nth-child(2) {
+  color: var(--primary-color);
+}
+
 
 .Maghrib td,
 .Isha td {
