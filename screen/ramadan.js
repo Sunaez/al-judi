@@ -63,3 +63,5 @@ function updateTaraweehTimes() {
 
 // Initial call to updateTaraweehTimes
 updateTaraweehTimes();
+// Set interval to update Taraweeh times periodically
+setInterval(updateTaraweehTimes, 60000); // Update every minute (60000 milliseconds)
