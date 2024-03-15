@@ -4,7 +4,7 @@
 
 :root {
   --background-color: #ffeac5;
-  --primary-color: #0c2010;
+  --primary-color: #134f1f;
   --text-color: #252832;
 }
 
@@ -60,7 +60,18 @@ h4 {
 p {
   margin: 0;
 }
-
+ul {
+  list-style-type: none;
+  gap: 15px;
+}
+li {
+  list-style-type: none;
+  text-decoration: none;
+}
+.ar {
+  font-family: 'Noto Sans Arabic', sans-serif;
+  direction: rtl;
+}
 .Screen {
   padding: 0;
   margin: 0;
@@ -72,6 +83,21 @@ p {
   flex-direction: column;
   box-sizing: border-box;
 }
+
+.flex {
+  display: flex;
+  flex-direction: column;
+}
+.ramadan {
+ padding:0 !important;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 50vh;
+  gap: 10vh;
+}
+
 .invert-filter {
   filter: invert(1);
 }
