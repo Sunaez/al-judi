@@ -23,10 +23,10 @@ function getTodaysIshaTime(csv) {
       const ishaHour = parseInt(ishaTimeParts[0]);
       const ishaMinute = parseInt(ishaTimeParts[1]);
 
-    // Calculate Taraweeh start time (45 minutes after Isha)
-    const taraweehStartHour = (ishaHour + Math.floor((ishaMinute + 45) / 60)) % 24;
-    const taraweehStartMinute = (ishaMinute + 45) % 60;
-    const taraweehStart = new Date(yyyy, mm - 1, dd, taraweehStartHour, taraweehStartMinute);
+// Calculate Taraweeh start time (30 minutes after Isha)
+const taraweehStartHour = (ishaHour + Math.floor((ishaMinute + 30) / 60)) % 24;
+const taraweehStartMinute = (ishaMinute + 30) % 60;
+const taraweehStart = new Date(yyyy, mm - 1, dd, taraweehStartHour, taraweehStartMinute);
 
 
       // Calculate Taraweeh end time (1 hour and 5 minutes after Isha)
@@ -63,3 +63,5 @@ function updateTaraweehTimes() {
 
 // Initial call to updateTaraweehTimes
 updateTaraweehTimes();
+// Set interval to update Taraweeh times periodically
+setInterval(updateTaraweehTimes, 60000); // Update every minute (60000 milliseconds)
