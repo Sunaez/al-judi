@@ -68,6 +68,10 @@ li {
   list-style-type: none;
   text-decoration: none;
 }
+
+.pr {
+  color: var(--primary-color);
+}
 .ar {
   font-family: 'Noto Sans Arabic', sans-serif;
   direction: rtl;
