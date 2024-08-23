@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time of Day Timeline</title>
+  <!-- Import Vue from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #121212;
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+    }
+    .timeline {
+      position: relative;
+      width: 80%;
+      height: 4px;
+      background-color: #ffffff;
+    }
+    .time-marker {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      color: #ffffff;
+    }
+    .time-marker.filled {
+      background-color: #ffffff;
+      color: #121212;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="timeline">
+    <div v-for="time in times" 
+         :key="time.time" 
+         :class="['time-marker', isPast(time.time) ? 'filled' : '']"
+         :style="{ left: calculatePosition(time.time) + '%' }">
+      <span class="tooltip">{{ time.label }}</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      times: [
+        { time: "04:23", label: "04:23" },
+        { time: "05:00", label: "05:00" },
+        { time: "06:05", label: "06:05" },
+        { time: "13:11", label: "13:11" },
+        { time: "13:30", label: "13:30" },
+        { time: "16:59", label: "16:59" },
+        { time: "17:30", label: "17:30" },
+        { time: "20:17", label: "20:17" },
+        { time: "21:37", label: "21:37" }
+      ],
+      currentTime: this.getCurrentTime()
+    },
+    methods: {
+      calculatePosition(time) {
+        const [hours, minutes] = time.split(":").map(Number);
+        const totalMinutes = hours * 60 + minutes;
+        return (totalMinutes / (24 * 60)) * 100;
+      },
+      isPast(time) {
+        return time <= this.currentTime;
+      },
+      getCurrentTime() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`;
+      }
+    },
+    mounted() {
+      setInterval(() => {
+        this.currentTime = this.getCurrentTime();
+      }, 60000); // Update every minute
+    }
+  });
+</script>
+
+</body>
+</html>
