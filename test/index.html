@@ -1,101 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Time of Day Timeline</title>
-  <!-- Import Vue from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #121212;
-      font-family: Arial, sans-serif;
-      color: #ffffff;
-    }
-    .timeline {
-      position: relative;
-      width: 80%;
-      height: 4px;
-      background-color: #ffffff;
-    }
-    .time-marker {
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 10px;
-      color: #ffffff;
-    }
-    .time-marker.filled {
-      background-color: #ffffff;
-      color: #121212;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al-judi Centre</title>
+    <link rel="stylesheet" href="Style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+  
 </head>
+
 <body>
+    <div class="Screen">
+        <div class="top">
+            <div class="mosque-name">
+                <h1>Al-Judi Masjid</h1>
+            </div>
+            <div class="time" id="time">
+                <p>The time is here</p>
+            </div>
+            <div class="timeS" style="display: none;" id="timeS"></div>
+            <div class="dates">
+                <div id="normal"></div>
+                <div id="islamic">
+                    <script src="./hijri.js"></script>
+                </div>
+            </div>
+        </div>
+        <div class="middle">
+            <div class="overlay" id="urgent">
+                <div class="countdown-text" id="countdownDiv"></div>
+                <div class="prayer-in-progress-text" id="prayerInProgressDiv"></div>
+                <div class="phones">
+                    <i class='bx bx-power-off'></i>
+                    <strong>Please silent your mobile phones.</strong>
+                    <i class='bx bx-phone-off'></i>
+                </div>
+            </div>
+            <div class="prayertimes">
+                <table class="Table">
+                    <tr>
+                        <th></th>
+                        <th>Jama'at</th>
+                    </tr>
 
-<div id="app">
-  <div class="timeline">
-    <div v-for="time in times" 
-         :key="time.time" 
-         :class="['time-marker', isPast(time.time) ? 'filled' : '']"
-         :style="{ left: calculatePosition(time.time) + '%' }">
-      <span class="tooltip">{{ time.label }}</span>
-    </div>
-  </div>
-</div>
+                    <tr class="Fajr">
+                        <td>Fajr</td>
+                        <td id="FajrTime"></td>
+                    </tr>
 
-<script>
-  new Vue({
-    el: '#app',
-    data: {
-      times: [
-        { time: "04:23", label: "04:23" },
-        { time: "05:00", label: "05:00" },
-        { time: "06:05", label: "06:05" },
-        { time: "13:11", label: "13:11" },
-        { time: "13:30", label: "13:30" },
-        { time: "16:59", label: "16:59" },
-        { time: "17:30", label: "17:30" },
-        { time: "20:17", label: "20:17" },
-        { time: "21:37", label: "21:37" }
-      ],
-      currentTime: this.getCurrentTime()
-    },
-    methods: {
-      calculatePosition(time) {
-        const [hours, minutes] = time.split(":").map(Number);
-        const totalMinutes = hours * 60 + minutes;
-        return (totalMinutes / (24 * 60)) * 100;
-      },
-      isPast(time) {
-        return time <= this.currentTime;
-      },
-      getCurrentTime() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        return `${hours}:${minutes}`;
-      }
-    },
-    mounted() {
-      setInterval(() => {
-        this.currentTime = this.getCurrentTime();
-      }, 60000); // Update every minute
-    }
-  });
-</script>
+                    <tr class="Dhuhr">
+                        <td>Dhuhr</td>
+                        <td id="DhuhrTime"></td>
+                    </tr>
 
+                    <tr class="Asr">
+                        <td>Asr</td>
+                        <td id="AsrTime"></td>
+                    </tr>
+
+                    <tr class="Maghrib">
+                        <td>Maghrib</td>
+                        <td colspan="2" id="MaghribTime"></td>
+                    </tr>
+
+                    <tr class="Isha">
+                        <td>Isha</td>
+                        <td colspan="2" id="IshaTime"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right">
+                <div class="rotating-content main" style="display: block;">
+                    <div class="primary">
+                        <div class="salaam">
+                            ٱلسَّلَامُ عَلَيْكُمْ
+                        </div>
+                        <div class="welcome">Welcome to <br> <strong>Al-judi Masjid</strong></div>
+                        <div class="link"> <span class="urgency">www.aljudi-masjid.co.uk</span></div>
+                        <div class="welcome">بەخێر بێن بۆ مزگەوتی جودی</div>
+                        <div class="jummah">Masjid Jummah time is at 13:30</div>
+                    </div>
+                </div>
+                <div class="rotating-content quran">
+                    <div class="verse-container">
+                        <div class="verse">وَإِذَا سَأَلَكَ عِبَادِى عَنِّى فَإِنِّى قَرِيبٌ ۖ أُجِيبُ دَعْوَةَ ٱلدَّاعِ إِذَا دَعَانِ ۖ فَلْيَسْتَجِيبُوا۟ لِى وَلْيُؤْمِنُوا۟ بِى لَعَلَّهُمْ يَرْشُدُونَ</div>
+                        <div class="translation-container">
+                            <div class="translation">When My servants ask you ˹O Prophet˺ about Me: I am truly near. I respond to one’s prayer when they call upon Me. So let them respond ˹with obedience˺ to Me and believe in Me, perhaps they will be guided ˹to the Right Way˺.
+                            </div>
+                    </div>
+                    <div class="wrapper">
+                        <div class="jummah">Al-Baqarah 2:186</div>
+                    </div>
+                </div>
+                </div>
+                <div class="rotating-content hadith">
+                    <div class="verse-container">
+                        <div class="verse">مَنْ يَهْدِهِ اللَّهُ فَلاَ مُضِلَّ لَهُ وَمَنْ يُضْلِلْهُ فَلاَ هَادِيَ لَهُ إِنَّ أَصْدَقَ </div>
+                        <div class="translation-container">
+                        <div class="translation">
+                            Whoever Allah guides, there is no one to lead him astray, and whoever He leads astray, there is no one to guide him.
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                        <div class="jummah">Sunan an-Nasa'i 1578</div>
+                    </div>
+                </div>
+                </div>
+                <div class="rotating-content donation">
+                    <div class="primary">
+                        <div class="welcome">
+                            <span class="urgency">Help out our Masjid</span>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Name: SBKC
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah pr">
+                                Sort Code: 30-96-26
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah pr">
+                                Acc no: 74553560
+                           </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Please <span class="urgency">donate generously!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rotating-content donation">
+                    <div class="primary">
+                        <div class="welcome">
+                            <span class="urgency">Help out our Masjid</span>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Name: SBKC
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah pr">
+                                Sort Code: 30-96-26
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah pr">
+                                Acc no: 74553560
+                           </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Please <span class="urgency">donate generously!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rotating-content hadith">
+                    <div class="verse-container">
+                        <div class="verse">يَـٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ هَلْ أَدُلُّكُمْ عَلَىٰ تِجَـٰرَةٍۢ تُنجِيكُم مِّنْ عَذَابٍ أَلِيمٍۢ</div>
+                        <div class="verse">تُؤْمِنُونَ بِٱللَّهِ وَرَسُولِهِۦ وَتُجَـٰهِدُونَ فِى سَبِيلِ ٱللَّهِ بِأَمْوَٰلِكُمْ وَأَنفُسِكُمْ ۚ ذَٰلِكُمْ خَيْرٌۭ لَّكُمْ إِن كُنتُمْ تَعْلَمُونَ</div>
+                        <div class="translation-container">
+                        <div class="translation">
+                            O believers! Shall I guide you to an exchange that will save you from a painful punishment? ˹It is to˺ have faith in Allah and His Messenger, and strive in the cause of Allah with your wealth and your lives. That is best for you, if only you knew.
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                        <div class="jummah">As-saf 61:10-11</div>
+                    </div>
+                </div>
+                </div>
+                <div class="Jumma-Content">
+                    <div class="jumma-container">
+                        <div class="welcome">
+                            Please <span class="urgency">don't forget to help</span> the mosque !
+                        </div>
+                        <div class="welcome">
+                            تکایە یارمەتی مزگەوتتان لەبیرنەچێت
+                        </div>
+                        <div class="link">
+                            <i class='bx bxs-donate-heart'></i> <br>
+                            <span class="urgency">
+                                you can help by donating to the masjid <br>
+                            </span>
+                            May Allah SWT reward you generously <br>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Name: SBKC
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                30-96-26
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                74553560
+                           </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+            <script src="darkmode.js"></script>
+            <script src="./time.js"></script>
+            <script src="./date.js"></script>
+            <script src="./prayertimes.js"></script>
+            <script defer src="./right-side.js"></script>
+            <script src="refresh.js"></script>
+            <script src="ramadan.js"></script>
 </body>
+
 </html>
