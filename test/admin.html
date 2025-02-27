@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel with Multiple Conditions</title>
+  <style>
+    /* Simple styling for demo purposes */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #admin-container {
+      display: none; /* hidden until user is authenticated */
+    }
+    .hidden {
+      display: none;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+      border-collapse: collapse;
+      padding: 8px;
+    }
+    table {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+    input, select, button {
+      margin: 4px 0;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+    .form-group {
+      margin-bottom: 10px;
+      max-width: 300px;
+    }
+    .error {
+      color: red;
+      margin: 10px 0;
+    }
+    .success {
+      color: green;
+      margin: 10px 0;
+    }
+    /* Autocomplete styles */
+    .autocomplete-container {
+      position: relative;
+      max-width: 300px;
+    }
+    .suggestions {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ccc;
+      width: 100%;
+      max-height: 150px;
+      overflow-y: auto;
+      z-index: 999;
+    }
+    .suggestion-item {
+      padding: 8px;
+      cursor: pointer;
+    }
+    .suggestion-item:hover {
+      background-color: #eee;
+    }
+    /* Display selected conditions as "chips" */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .chip {
+      background-color: #ddd;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .chip span {
+      margin-right: 6px;
+    }
+    .chip button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Page (Multiple Weather Conditions)</h1>
+
+  <!-- LOGIN FORM -->
+  <div id="login-form">
+    <h2>Sign In</h2>
+    <div class="form-group">
+      <label for="loginEmail">Email:</label><br/>
+      <input type="email" id="loginEmail" placeholder="Enter your email" />
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Password:</label><br/>
+      <input type="password" id="loginPassword" placeholder="Enter your password" />
+    </div>
+    <button id="loginBtn">Login</button>
+    <div class="error" id="loginError"></div>
+  </div>
+
+  <!-- ADMIN CONTAINER (shown only after login) -->
+  <div id="admin-container">
+    <h2>Welcome to the Admin Panel</h2>
+    <button id="logoutBtn">Logout</button>
+
+    <!-- FORM TO ADD A NEW ENTRY -->
+    <div id="add-form">
+      <h3>Add New Entry</h3>
+      <div class="form-group">
+        <label for="arabicInput">Arabic Text:</label><br/>
+        <input type="text" id="arabicInput" placeholder="Arabic text here..." />
+      </div>
+      <div class="form-group">
+        <label for="englishInput">English Translation:</label><br/>
+        <input type="text" id="englishInput" placeholder="English translation here..." />
+      </div>
+      <div class="form-group">
+        <label for="themeInput">Theme Tag:</label><br/>
+        <input type="text" id="themeInput" placeholder="e.g. Reminder, Du'a, etc." />
+      </div>
+
+      <!-- Autocomplete + multi-select for Weather Conditions -->
+      <div class="form-group autocomplete-container">
+        <label for="conditionSearch">Add Condition(s):</label><br/>
+        <input type="text" id="conditionSearch" placeholder="Type to search (e.g. rain, sunny, snow)..." />
+        <div id="conditionSuggestions" class="suggestions"></div>
+        <div id="selectedConditions" class="chips"></div>
+      </div>
+
+      <button id="addBtn">Add Entry</button>
+      <div class="error" id="addError"></div>
+      <div class="success" id="addSuccess"></div>
+    </div>
+
+    <!-- TABLE OF EXISTING ENTRIES -->
+    <h3>Existing Entries</h3>
+    <table id="entriesTable">
+      <thead>
+        <tr>
+          <th>Arabic</th>
+          <th>English</th>
+          <th>Theme</th>
+          <th>Conditions (Codes)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="entriesBody">
+        <!-- Filled dynamically by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Firebase + Admin Logic -->
+  <script type="module">
+    // ------------- WEATHER CONDITIONS DATA -------------
+    // From your provided WeatherAPI codes JSON:
+    const weatherConditions = [
+      {"code":1000,"day":"Sunny","night":"Clear","icon":113},
+      {"code":1003,"day":"Partly cloudy","night":"Partly cloudy","icon":116},
+      {"code":1006,"day":"Cloudy","night":"Cloudy","icon":119},
+      {"code":1009,"day":"Overcast","night":"Overcast","icon":122},
+      {"code":1030,"day":"Mist","night":"Mist","icon":143},
+      {"code":1063,"day":"Patchy rain possible","night":"Patchy rain possible","icon":176},
+      {"code":1066,"day":"Patchy snow possible","night":"Patchy snow possible","icon":179},
+      {"code":1069,"day":"Patchy sleet possible","night":"Patchy sleet possible","icon":182},
+      {"code":1072,"day":"Patchy freezing drizzle possible","night":"Patchy freezing drizzle possible","icon":185},
+      {"code":1087,"day":"Thundery outbreaks possible","night":"Thundery outbreaks possible","icon":200},
+      {"code":1114,"day":"Blowing snow","night":"Blowing snow","icon":227},
+      {"code":1117,"day":"Blizzard","night":"Blizzard","icon":230},
+      {"code":1135,"day":"Fog","night":"Fog","icon":248},
+      {"code":1147,"day":"Freezing fog","night":"Freezing fog","icon":260},
+      {"code":1150,"day":"Patchy light drizzle","night":"Patchy light drizzle","icon":263},
+      {"code":1153,"day":"Light drizzle","night":"Light drizzle","icon":266},
+      {"code":1168,"day":"Freezing drizzle","night":"Freezing drizzle","icon":281},
+      {"code":1171,"day":"Heavy freezing drizzle","night":"Heavy freezing drizzle","icon":284},
+      {"code":1180,"day":"Patchy light rain","night":"Patchy light rain","icon":293},
+      {"code":1183,"day":"Light rain","night":"Light rain","icon":296},
+      {"code":1186,"day":"Moderate rain at times","night":"Moderate rain at times","icon":299},
+      {"code":1189,"day":"Moderate rain","night":"Moderate rain","icon":302},
+      {"code":1192,"day":"Heavy rain at times","night":"Heavy rain at times","icon":305},
+      {"code":1195,"day":"Heavy rain","night":"Heavy rain","icon":308},
+      {"code":1198,"day":"Light freezing rain","night":"Light freezing rain","icon":311},
+      {"code":1201,"day":"Moderate or heavy freezing rain","night":"Moderate or heavy freezing rain","icon":314},
+      {"code":1204,"day":"Light sleet","night":"Light sleet","icon":317},
+      {"code":1207,"day":"Moderate or heavy sleet","night":"Moderate or heavy sleet","icon":320},
+      {"code":1210,"day":"Patchy light snow","night":"Patchy light snow","icon":323},
+      {"code":1213,"day":"Light snow","night":"Light snow","icon":326},
+      {"code":1216,"day":"Patchy moderate snow","night":"Patchy moderate snow","icon":329},
+      {"code":1219,"day":"Moderate snow","night":"Moderate snow","icon":332},
+      {"code":1222,"day":"Patchy heavy snow","night":"Patchy heavy snow","icon":335},
+      {"code":1225,"day":"Heavy snow","night":"Heavy snow","icon":338},
+      {"code":1237,"day":"Ice pellets","night":"Ice pellets","icon":350},
+      {"code":1240,"day":"Light rain shower","night":"Light rain shower","icon":353},
+      {"code":1243,"day":"Moderate or heavy rain shower","night":"Moderate or heavy rain shower","icon":356},
+      {"code":1246,"day":"Torrential rain shower","night":"Torrential rain shower","icon":359},
+      {"code":1249,"day":"Light sleet showers","night":"Light sleet showers","icon":362},
+      {"code":1252,"day":"Moderate or heavy sleet showers","night":"Moderate or heavy sleet showers","icon":365},
+      {"code":1255,"day":"Light snow showers","night":"Light snow showers","icon":368},
+      {"code":1258,"day":"Moderate or heavy snow showers","night":"Moderate or heavy snow showers","icon":371},
+      {"code":1261,"day":"Light showers of ice pellets","night":"Light showers of ice pellets","icon":374},
+      {"code":1264,"day":"Moderate or heavy showers of ice pellets","night":"Moderate or heavy showers of ice pellets","icon":377},
+      {"code":1273,"day":"Patchy light rain with thunder","night":"Patchy light rain with thunder","icon":386},
+      {"code":1276,"day":"Moderate or heavy rain with thunder","night":"Moderate or heavy rain with thunder","icon":389},
+      {"code":1279,"day":"Patchy light snow with thunder","night":"Patchy light snow with thunder","icon":392},
+      {"code":1282,"day":"Moderate or heavy snow with thunder","night":"Moderate or heavy snow with thunder","icon":395}
+    ];
+
+    // ------------- FIREBASE IMPORTS -------------
+    import { 
+      initializeApp 
+    } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      doc,
+      deleteDoc,
+      updateDoc
+    } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+    // ------------- DOM ELEMENTS -------------
+    const loginForm = document.getElementById("login-form");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginError = document.getElementById("loginError");
+
+    const adminContainer = document.getElementById("admin-container");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const arabicInput = document.getElementById("arabicInput");
+    const englishInput = document.getElementById("englishInput");
+    const themeInput = document.getElementById("themeInput");
+
+    const addBtn = document.getElementById("addBtn");
+    const addError = document.getElementById("addError");
+    const addSuccess = document.getElementById("addSuccess");
+
+    const entriesBody = document.getElementById("entriesBody");
+
+    // Autocomplete + multi-select
+    const conditionSearch = document.getElementById("conditionSearch");
+    const conditionSuggestions = document.getElementById("conditionSuggestions");
+    const selectedConditionsEl = document.getElementById("selectedConditions");
+
+    // We'll store selected weather codes in this array
+    let selectedConditions = [];
+
+    let auth, db;
+
+    // ------------- FETCH FIREBASE CONFIG -------------
+    async function getFirebaseConfig() {
+      const res = await fetch("/fbConfig");
+      return await res.json();
+    }
+
+    // ------------- INITIALIZE FIREBASE -------------
+    async function initFirebase() {
+      const config = await getFirebaseConfig();
+      const app = initializeApp(config);
+      auth = getAuth(app);
+      db = getFirestore(app);
+
+      // Listen for auth state changes
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // Logged in
+          loginForm.style.display = "none";
+          adminContainer.style.display = "block";
+          loadEntries(); // load Firestore data
+        } else {
+          // Not logged in
+          loginForm.style.display = "block";
+          adminContainer.style.display = "none";
+        }
+      });
+    }
+
+    // ------------- AUTH EVENTS -------------
+    loginBtn.addEventListener("click", async () => {
+      loginError.textContent = "";
+      try {
+        await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
+      } catch (error) {
+        loginError.textContent = error.message;
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    // ------------- FIRESTORE CRUD -------------
+    async function loadEntries() {
+      entriesBody.innerHTML = ""; // clear table first
+
+      try {
+        // Choose your collection name, e.g. "verses"
+        const colRef = collection(db, "verses");
+        const snapshot = await getDocs(colRef);
+
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const row = document.createElement("tr");
+
+          // Create cells
+          const arabicTd = document.createElement("td");
+          arabicTd.textContent = data.arabic || "";
+
+          const englishTd = document.createElement("td");
+          englishTd.textContent = data.english || "";
+
+          const themeTd = document.createElement("td");
+          themeTd.textContent = data.theme || "";
+
+          // Show conditions as comma-separated codes
+          const conditionsTd = document.createElement("td");
+          if (Array.isArray(data.conditions)) {
+            conditionsTd.textContent = data.conditions.join(", ");
+          } else {
+            conditionsTd.textContent = "";
+          }
+
+          // Actions
+          const actionsTd = document.createElement("td");
+
+          // Delete button
+          const delBtn = document.createElement("button");
+          delBtn.textContent = "Delete";
+          delBtn.style.marginRight = "6px";
+          delBtn.addEventListener("click", () => deleteEntry(docSnap.id));
+
+          // Edit button (simple prompt-based approach)
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.addEventListener("click", () => {
+            const newArabic = prompt("Update Arabic text:", data.arabic);
+            const newEnglish = prompt("Update English text:", data.english);
+            const newTheme = prompt("Update Theme:", data.theme);
+            // Handling multi-condition editing would require more advanced UI;
+            // We'll skip that for simplicity:
+            updateEntry(docSnap.id, {
+              arabic: newArabic,
+              english: newEnglish,
+              theme: newTheme
+            });
+          });
+
+          actionsTd.appendChild(editBtn);
+          actionsTd.appendChild(delBtn);
+
+          // Append cells to row
+          row.appendChild(arabicTd);
+          row.appendChild(englishTd);
+          row.appendChild(themeTd);
+          row.appendChild(conditionsTd);
+          row.appendChild(actionsTd);
+
+          // Append row to table body
+          entriesBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error loading entries:", error);
+      }
+    }
+
+    async function addEntry() {
+      addError.textContent = "";
+      addSuccess.textContent = "";
+
+      const arabicVal = arabicInput.value.trim();
+      const englishVal = englishInput.value.trim();
+      const themeVal = themeInput.value.trim();
+
+      if (!arabicVal || !englishVal) {
+        addError.textContent = "Arabic and English fields are required.";
+        return;
+      }
+
+      try {
+        const colRef = collection(db, "verses");
+        await addDoc(colRef, {
+          arabic: arabicVal,
+          english: englishVal,
+          theme: themeVal,
+          conditions: selectedConditions // store the array of selected codes
+        });
+        addSuccess.textContent = "Entry added successfully!";
+        // Clear input fields
+        arabicInput.value = "";
+        englishInput.value = "";
+        themeInput.value = "";
+        selectedConditions = [];
+        renderSelectedConditions(); // clear the chips
+        conditionSearch.value = "";
+        // Reload entries
+        loadEntries();
+      } catch (error) {
+        addError.textContent = error.message;
+      }
+    }
+
+    async function deleteEntry(docId) {
+      try {
+        await deleteDoc(doc(db, "verses", docId));
+        loadEntries();
+      } catch (error) {
+        console.error("Error deleting entry:", error);
+      }
+    }
+
+    async function updateEntry(docId, updatedData) {
+      try {
+        await updateDoc(doc(db, "verses", docId), updatedData);
+        loadEntries();
+      } catch (error) {
+        console.error("Error updating entry:", error);
+      }
+    }
+
+    // ------------- AUTOCOMPLETE + MULTI-SELECT LOGIC -------------
+    // Render the "chips" for selected conditions
+    function renderSelectedConditions() {
+      selectedConditionsEl.innerHTML = "";
+      selectedConditions.forEach((code) => {
+        const conditionObj = weatherConditions.find(c => c.code === code);
+        const label = conditionObj
+          ? `${conditionObj.day} (${conditionObj.code})`
+          : `Unknown (${code})`;
+
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        const span = document.createElement("span");
+        span.textContent = label;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "x";
+        removeBtn.addEventListener("click", () => {
+          selectedConditions = selectedConditions.filter(c => c !== code);
+          renderSelectedConditions();
+        });
+
+        chip.appendChild(span);
+        chip.appendChild(removeBtn);
+        selectedConditionsEl.appendChild(chip);
+      });
+    }
+
+    // Show suggestions in a dropdown
+    function showSuggestions(list) {
+      conditionSuggestions.innerHTML = "";
+      list.forEach(item => {
+        const suggestionItem = document.createElement("div");
+        suggestionItem.className = "suggestion-item";
+        suggestionItem.textContent = `${item.day} (${item.code})`;
+        suggestionItem.addEventListener("click", () => {
+          // Add this code to selectedConditions if not already present
+          if (!selectedConditions.includes(item.code)) {
+            selectedConditions.push(item.code);
+            renderSelectedConditions();
+          }
+          // Clear the input + suggestions
+          conditionSearch.value = "";
+          conditionSuggestions.innerHTML = "";
+        });
+        conditionSuggestions.appendChild(suggestionItem);
+      });
+    }
+
+    // Filter conditions on input
+    conditionSearch.addEventListener("input", () => {
+      const query = conditionSearch.value.toLowerCase().trim();
+      if (!query) {
+        conditionSuggestions.innerHTML = "";
+        return;
+      }
+      // Filter by day or night text
+      const filtered = weatherConditions.filter(item =>
+        item.day.toLowerCase().includes(query) ||
+        item.night.toLowerCase().includes(query)
+      );
+      showSuggestions(filtered);
+    });
+
+    // Clicking outside suggestions should close them
+    document.addEventListener("click", (e) => {
+      if (!conditionSuggestions.contains(e.target) && e.target !== conditionSearch) {
+        conditionSuggestions.innerHTML = "";
+      }
+    });
+
+    // ------------- EVENT LISTENERS -------------
+    addBtn.addEventListener("click", addEntry);
+
+    // ------------- INITIALIZE -------------
+    window.addEventListener("DOMContentLoaded", initFirebase);
+  </script>
+</body>
+</html>
