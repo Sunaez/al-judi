@@ -10,270 +10,219 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <script src="https://unpkg.com/vue@3.2.47/dist/vue.global.js"></script>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+  
 </head>
 
 <body>
-    <div id="app">
-        <div class="Screen">
-            <div class="top">
-                <div class="mosque-name">
-                    <h1>Al-Judi Masjid</h1>
-                </div>
-                <div class="time" id="time">
-                    <p>{{ time.hours }}:{{ time.minutes }}:{{ time.seconds }}</p>
-                </div>
-                <div class="dates">
-                    <div id="normal">{{ normalDate }}</div>
-                    <div id="islamic">{{ islamicDate }}</div>
-                </div>
+    <div class="Screen">
+        <div class="top">
+            <div class="mosque-name">
+                <h1>Al-Judi Masjid</h1>
             </div>
-
-            <div class="middle">
-                <div class="prayertimes">
-                    <table class="Table">
-                        <tr>
-                            <th></th>
-                            <th>Jama'at</th>
-                        </tr>
-
-                        <tr class="Fajr">
-                            <td>Fajr</td>
-                            <td>{{ prayerTimes.Fajr }}</td>
-                        </tr>
-
-                        <tr class="Dhuhr">
-                            <td>Dhuhr</td>
-                            <td>{{ prayerTimes.Dhuhr }}</td>
-                        </tr>
-
-                        <tr class="Asr">
-                            <td>Asr</td>
-                            <td>{{ prayerTimes.Asr }}</td>
-                        </tr>
-
-                        <tr class="Maghrib">
-                            <td>Maghrib</td>
-                            <td>{{ prayerTimes.Maghrib }}</td>
-                        </tr>
-
-                        <tr class="Isha">
-                            <td>Isha</td>
-                            <td>{{ prayerTimes.Isha }}</td>
-                        </tr>
-                    </table>
+            <div class="time" id="time">
+                <p>The time is here</p>
+            </div>
+            <div class="timeS" style="display: none;" id="timeS"></div>
+            <div class="dates">
+                <div id="normal"></div>
+                <div id="islamic">
+                    <script src="./hijri.js"></script>
                 </div>
             </div>
         </div>
-    </div>
-    <script>
-        const { createApp } = Vue;
+        <div class="middle">
+            <div class="overlay" id="urgent">
+                <div class="countdown-text" id="countdownDiv"></div>
+                <div class="prayer-in-progress-text" id="prayerInProgressDiv"></div>
+                <div class="phones">
+                    <i class='bx bx-power-off'></i>
+                    <strong>Please silent your mobile phones.</strong>
+                    <i class='bx bx-phone-off'></i>
+                </div>
+            </div>
+            <div class="prayertimes">
+                <table class="Table">
+                    <tr>
+                        <th></th>
+                        <th>Jama'at</th>
+                    </tr>
 
-        createApp({
-            data() {
-                return {
-                    time: {
-                        Hours: '00',
-                        Minutes: '00',
-                        Seconds: '00'
-                    },
-                    normalDate: '',
-                    islamicDate: '',
-                    prayerTimes: {
-                        Fajr: '',
-                        Dhuhr: '',
-                        Asr: '',
-                        Maghrib: '',
-                        Isha: ''
-                    },
-                    nextPrayer: null,
-                    countdownSeconds: 0,
-                    showOverlay: false
-                }
-            },
-            methods: {
-                updateTime() {
-                    this.time = setInterval(() => {
-                        const now = new Date();
-                        const hours = String(now.getHours()).padStart(2, '0');
-                        const minutes = String(now.getMinutes()).padStart(2, '0');
-                        const seconds = String(now.getSeconds()).padStart(2, '0');
-                        this.time = { hours, minutes, seconds };
-                    }, 1000); // Update every Second
-                },
+                    <tr class="Fajr">
+                        <td>Fajr</td>
+                        <td id="FajrTime"></td>
+                    </tr>
 
-                updateNormalDate() {
-                    const now = new Date();
-                    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-                    this.normalDate = now.toLocaleDateString('en-GB', options);
-                },
+                    <tr class="Dhuhr">
+                        <td>Dhuhr</td>
+                        <td id="DhuhrTime"></td>
+                    </tr>
 
-                updateHijriDate() {
-                    // Function to calculate and format the Hijri date
-                    function gmod(n, m) {
-                        return ((n % m) + m) % m;
-                    }
+                    <tr class="Asr">
+                        <td>Asr</td>
+                        <td id="AsrTime"></td>
+                    </tr>
 
-                    function kuwaiticalendar(adjust) {
-                        var today = new Date();
-                        if (adjust) {
-                            adjustmili = 1000 * 60 * 60 * 24 * adjust;
-                            todaymili = today.getTime() + adjustmili;
-                            today = new Date(todaymili);
-                        }
-                        var day = today.getDate();
-                        var month = today.getMonth();
-                        var year = today.getFullYear();
-                        var m = month + 1;
-                        var y = year;
-                        if (m < 3) {
-                            y -= 1;
-                            m += 12;
-                        }
+                    <tr class="Maghrib">
+                        <td>Maghrib</td>
+                        <td colspan="2" id="MaghribTime"></td>
+                    </tr>
 
-                        var a = Math.floor(y / 100.);
-                        var b = 2 - a + Math.floor(a / 4.);
-                        if (y < 1583) b = 0;
-                        if (y == 1582) {
-                            if (m > 10) b = -10;
-                            if (m == 10) {
-                                b = 0;
-                                if (day > 4) b = -10;
-                            }
-                        }
+                    <tr class="Isha">
+                        <td>Isha</td>
+                        <td colspan="2" id="IshaTime"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right">
+                <div class="rotating-content main" style="display: block;">
+                    <div class="primary">
+                        <div class="salaam">
+                            ٱلسَّلَامُ عَلَيْكُمْ
+                        </div>
+                        <div class="welcome">Welcome to <br> <strong>Al-judi Masjid</strong></div>
+                        <div class="link"> <span class="urgency">www.aljudi-masjid.co.uk</span></div>
+                        <div class="welcome">بەخێر بێن بۆ مزگەوتی جودی</div>
+                        <div class="jummah">Masjid Jummah time is at 12:45</div>
+                    </div>
+                </div>
+                <div class="rotating-content quran">
+                    <div class="verse-container">
+                        <div class="verse">وَإِذَا سَأَلَكَ عِبَادِى عَنِّى فَإِنِّى قَرِيبٌ ۖ أُجِيبُ دَعْوَةَ ٱلدَّاعِ إِذَا دَعَانِ ۖ فَلْيَسْتَجِيبُوا۟ لِى وَلْيُؤْمِنُوا۟ بِى لَعَلَّهُمْ يَرْشُدُونَ</div>
+                        <div class="translation-container">
+                            <div class="translation">When My servants ask you ˹O Prophet˺ about Me: I am truly near. I respond to one’s prayer when they call upon Me. So let them respond ˹with obedience˺ to Me and believe in Me, perhaps they will be guided ˹to the Right Way˺.
+                            </div>
+                    </div>
+                    <div class="wrapper">
+                        <div class="jummah">Al-Baqarah 2:186</div>
+                    </div>
+                </div>
+                </div>
+                <div class="rotating-content hadith">
+                    <div class="verse-container">
+                        <div class="verse">مَنْ يَهْدِهِ اللَّهُ فَلاَ مُضِلَّ لَهُ وَمَنْ يُضْلِلْهُ فَلاَ هَادِيَ لَهُ إِنَّ أَصْدَقَ </div>
+                        <div class="translation-container">
+                        <div class="translation">
+                            Whoever Allah guides, there is no one to lead him astray, and whoever He leads astray, there is no one to guide him.
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                        <div class="jummah">Sunan an-Nasa'i 1578</div>
+                    </div>
+                </div>
+                </div>
+                <div class="rotating-content donation">
+                    <div class="primary">
+                        <div class="welcome">
+                            <span class="urgency">Help out our Masjid</span>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Name: SBKC
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah pr">
+                                Sort Code: 30-96-26
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah pr">
+                                Acc no: 74553560
+                           </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Please <span class="urgency">donate generously!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rotating-content donation">
+                    <div class="primary">
+                        <div class="welcome">
+                            <span class="urgency">Help out our Masjid</span>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Name: SBKC
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah pr">
+                                Sort Code: 30-96-26
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah pr">
+                                Acc no: 74553560
+                           </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Please <span class="urgency">donate generously!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rotating-content hadith">
+                    <div class="verse-container">
+                        <div class="verse">يَـٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ هَلْ أَدُلُّكُمْ عَلَىٰ تِجَـٰرَةٍۢ تُنجِيكُم مِّنْ عَذَابٍ أَلِيمٍۢ</div>
+                        <div class="verse">تُؤْمِنُونَ بِٱللَّهِ وَرَسُولِهِۦ وَتُجَـٰهِدُونَ فِى سَبِيلِ ٱللَّهِ بِأَمْوَٰلِكُمْ وَأَنفُسِكُمْ ۚ ذَٰلِكُمْ خَيْرٌۭ لَّكُمْ إِن كُنتُمْ تَعْلَمُونَ</div>
+                        <div class="translation-container">
+                        <div class="translation">
+                            O believers! Shall I guide you to an exchange that will save you from a painful punishment? ˹It is to˺ have faith in Allah and His Messenger, and strive in the cause of Allah with your wealth and your lives. That is best for you, if only you knew.
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                        <div class="jummah">As-saf 61:10-11</div>
+                    </div>
+                </div>
+                </div>
+                <div class="Jumma-Content">
+                    <div class="jumma-container">
+                        <div class="welcome">
+                            Please <span class="urgency">don't forget to help</span> the mosque !
+                        </div>
+                        <div class="welcome">
+                            تکایە یارمەتی مزگەوتتان لەبیرنەچێت
+                        </div>
+                        <div class="link">
+                            <i class='bx bxs-donate-heart'></i> <br>
+                            <span class="urgency">
+                                you can help by donating to the masjid <br>
+                            </span>
+                            May Allah SWT reward you generously <br>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                Name: SBKC
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                30-96-26
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <div class="jummah">
+                                74553560
+                           </div>
+                        </div>
+                    </div>
 
-                        var jd = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + b - 1524;
-                        b = 0;
-                        if (jd > 2299160) {
-                            a = Math.floor((jd - 1867216.25) / 36524.25);
-                            b = 1 + a - Math.floor(a / 4.);
-                        }
-                        var bb = jd + b + 1524;
-                        var cc = Math.floor((bb - 122.1) / 365.25);
-                        var dd = Math.floor(365.25 * cc);
-                        var ee = Math.floor((bb - dd) / 30.6001);
-                        day = (bb - dd) - Math.floor(30.6001 * ee);
-                        month = ee - 1;
-                        if (ee > 13) {
-                            cc += 1;
-                            month = ee - 13;
-                        }
-                        year = cc - 4716;
-
-                        if (adjust) {
-                            var wd = gmod(jd + 1 - adjust, 7) + 1;
-                        } else {
-                            var wd = gmod(jd + 1, 7) + 1;
-                        }
-
-                        var iyear = 10631. / 30.;
-                        var epochastro = 1948084;
-                        var shift1 = 8.01 / 60.;
-
-                        var z = jd - epochastro;
-                        var cyc = Math.floor(z / 10631.);
-                        z = z - 10631 * cyc;
-                        var j = Math.floor((z - shift1) / iyear);
-                        var iy = 30 * cyc + j;
-                        z = z - Math.floor(j * iyear + shift1);
-                        var im = Math.floor((z + 28.5001) / 29.5);
-                        if (im == 13) im = 12;
-                        var id = z - Math.floor(29.5001 * im - 29);
-
-                        return [day, month - 1, year, jd - 1, wd - 1, id, im - 1, iy];
-                    }
-
-                    function writeIslamicDate(adjustment) {
-                        var iMonthNames = [
-                            "Muharram", "Safar", "Rabi'ul Awwal", "Rabi'ul Akhir",
-                            "Jumadal Ula", "Jumadal Akhira", "Rajab", "Sha'ban",
-                            "Ramadan", "Shawwal", "Dhul Qa'ada", "Dhul Hijja"
-                        ];
-                        var iDate = kuwaiticalendar(adjustment);
-                        var outputIslamicDate = iDate[5] + " " + iMonthNames[iDate[6]] + " " + iDate[7];
-                        return outputIslamicDate;
-                    }
-
-                    // Use the `writeIslamicDate` function to get the formatted Hijri date
-                    this.islamicDate = writeIslamicDate(0); // Adjust date if needed by passing a number (0 means no adjustment)
-                },
-
-                async fetchPrayerTimes() {
-                    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQfoFEcprp-CYQjw40GrjdNWToUSvv10TjQzpw30vPkpLdwLz5NSeKKhNlsseeAkWR5wBAZLnzNpDcq/pub?output=csv';
-                    const response = await fetch(url);
-                    const data = await response.text();
-
-                    const rows = data.split('\n').map(row => row.split(','));
-                    const today = new Date();
-                    const todayRow = rows.find(row => new Date(row[0]).toDateString() === today.toDateString());
-
-                    if (todayRow) {
-                        this.prayerTimes = {
-                            Fajr: todayRow[2],
-                            Dhuhr: todayRow[4],
-                            Asr: todayRow[6],
-                            Maghrib: todayRow[8],
-                            Isha: todayRow[9]
-                        };
-                        this.updateNextPrayer();
-                    }
-                },
-
-                updateNextPrayer() {
-                    const now = new Date();
-                    const currentTime = now.getHours() * 60 + now.getMinutes();
-
-                    const nextPrayer = Object.entries(this.prayerTimes).find(([name, time]) => {
-                        const [hours, minutes] = time.split(':').map(Number);
-                        return (hours * 60 + minutes) > currentTime;
-                    });
-
-                    if (nextPrayer) {
-                        this.nextPrayer = { name: nextPrayer[0], time: nextPrayer[1] };
-                    } else {
-                        // If no next prayer today, set to first prayer of next day
-                        const firstPrayer = Object.entries(this.prayerTimes)[0];
-                        this.nextPrayer = { name: firstPrayer[0], time: firstPrayer[1] };
-                    }
-                },
-
-                checkPrayerTime() {
-                    if (!this.nextPrayer) return;
-
-                    const now = new Date();
-                    const [hours, minutes] = this.nextPrayer.time.split(':').map(Number);
-                    const prayerTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-
-                    const timeDiff = prayerTime - now;
-                    const minutesUntilPrayer = Math.floor(timeDiff / 60000);
-
-                    if (minutesUntilPrayer === 1) {
-                        this.countdownSeconds = 60;
-                        this.showOverlay = false;
-                    } else if (minutesUntilPrayer === 0) {
-                        this.countdownSeconds = Math.max(0, Math.floor(timeDiff / 1000));
-                    } else if (minutesUntilPrayer > -5) {
-                        this.countdownSeconds = 0;
-                        this.showOverlay = true;
-                    } else {
-                        this.countdownSeconds = 0;
-                        this.showOverlay = false;
-                        this.updateNextPrayer();
-                    }
-                }
-            },
-            mounted() {
-                this.updateTime();
-                this.updateNormalDate();
-                this.updateHijriDate();
-                this.fetchPrayerTimes();
-            }
-        }).mount('#app');
-    </script>
-
-
-
-    </div>
+                </div>
+            </div>
+        </div>
+            <script src="darkmode.js"></script>
+            <script src="./time.js"></script>
+            <script src="./date.js"></script>
+            <script src="./prayertimes.js"></script>
+            <script defer src="./right-side.js"></script>
+            <script src="refresh.js"></script>
+            <script src="ramadan.js"></script>
 </body>
 
 </html>
