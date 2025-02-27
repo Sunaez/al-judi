@@ -237,6 +237,28 @@
               
                 fetchWeather();
               </script>
+              <script type="module">
+                import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+                import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
+              
+                async function initFirebase() {
+                  try {
+                    // Fetch your Firebase config from the Pages Function
+                    const res = await fetch("/fbConfig");
+                    const config = await res.json();
+              
+                    // Initialize Firebase with the fetched config
+                    const app = initializeApp(config);
+                    const analytics = getAnalytics(app);
+                    console.log("Firebase initialized:", app);
+                  } catch (error) {
+                    console.error("Error initializing Firebase:", error);
+                  }
+                }
+              
+                // Call on page load (or whenever you need it)
+                initFirebase();
+              </script>
               
 </body>
 
