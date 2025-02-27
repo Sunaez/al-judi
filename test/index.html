@@ -223,6 +223,21 @@
             <script defer src="./right-side.js"></script>
             <script src="refresh.js"></script>
             <script src="ramadan.js"></script>
+            <script>
+                async function fetchWeather() {
+                  try {
+                    const res = await fetch('/weather');
+                    const data = await res.json();
+                    console.log("Weather API Response:", data);
+                    // do something with data
+                  } catch (err) {
+                    console.error("Error fetching weather data:", err);
+                  }
+                }
+              
+                fetchWeather();
+              </script>
+              
 </body>
 
 </html>
