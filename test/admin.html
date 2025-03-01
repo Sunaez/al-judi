@@ -3,49 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <title>Admin Panel</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Basic styling for demo purposes */
+    /* Custom Fonts */
+    @font-face {
+      font-family: 'Uthmanic';
+      src: url('KFGQPC Uthmanic Script HAFS Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
+      font-family: 'Poppins', sans-serif;
     }
-    #admin-container {
-      display: none; /* hidden until user is authenticated */
+    .arabic-input {
+      font-family: 'Uthmanic', serif;
     }
-    .hidden {
-      display: none;
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
     }
-    table, th, td {
-      border: 1px solid #ccc;
-      border-collapse: collapse;
-      padding: 8px;
+    body.dark-mode .card,
+    body.dark-mode .table {
+      background-color: #1e1e1e;
+      border-color: #333;
+      color: #e0e0e0;
     }
-    table {
-      margin-top: 20px;
-      width: 100%;
-      max-width: 800px;
+    body.dark-mode .form-control,
+    body.dark-mode .form-select {
+      background-color: #333;
+      color: #e0e0e0;
+      border-color: #555;
     }
-    input, select, button {
-      margin: 4px 0;
-      padding: 6px;
-      box-sizing: border-box;
+    body.dark-mode .navbar {
+      background-color: #1e1e1e;
     }
-    .form-group {
-      margin-bottom: 10px;
-      max-width: 300px;
+    /* Ensure placeholders and helper text remain visible in dark mode */
+    body.dark-mode ::placeholder {
+      color: #aaa !important;
+      opacity: 1;
     }
-    .error {
-      color: red;
-      margin: 10px 0;
+    body.dark-mode .form-text {
+      color: #ccc;
     }
-    .success {
-      color: green;
-      margin: 10px 0;
-    }
-    /* Autocomplete styles */
+    /* Autocomplete Styles */
     .autocomplete-container {
       position: relative;
-      max-width: 300px;
     }
     .suggestions {
       position: absolute;
@@ -63,7 +69,7 @@
     .suggestion-item:hover {
       background-color: #eee;
     }
-    /* Display selected conditions as "chips" */
+    /* Chips for Custom Weather */
     .chips {
       display: flex;
       flex-wrap: wrap;
@@ -89,184 +95,505 @@
   </style>
 </head>
 <body>
-  <h1>Admin Panel</h1>
-
-  <!-- LOGIN FORM -->
-  <div id="login-form">
-    <h2>Sign In</h2>
-    <div class="form-group">
-      <label for="loginEmail">Email:</label><br />
-      <input type="email" id="loginEmail" placeholder="Enter your email" />
+  <!-- Navbar with Dark/Light Toggle -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="#">Admin Panel</a>
+      <button class="btn btn-outline-secondary" id="themeToggleBtn">Toggle Dark Mode</button>
     </div>
-    <div class="form-group">
-      <label for="loginPassword">Password:</label><br />
-      <input type="password" id="loginPassword" placeholder="Enter your password" />
+  </nav>
+  <div class="container">
+    <!-- Login Form -->
+    <div id="login-form" class="card p-4 mb-4">
+      <h2 class="card-title">Sign In</h2>
+      <div class="mb-3">
+        <label for="loginEmail" class="form-label">Email:</label>
+        <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email">
+      </div>
+      <div class="mb-3">
+        <label for="loginPassword" class="form-label">Password:</label>
+        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password">
+      </div>
+      <button id="loginBtn" class="btn btn-primary">Login</button>
+      <div class="text-danger mt-2" id="loginError"></div>
     </div>
-    <button id="loginBtn">Login</button>
-    <div class="error" id="loginError"></div>
-  </div>
-
-  <!-- ADMIN CONTAINER (shown only after login) -->
-  <div id="admin-container">
-    <h2>Welcome to the Admin Panel</h2>
-    <button id="logoutBtn">Logout</button>
-
-    <!-- FORM TO ADD A NEW ENTRY -->
-    <div id="add-form">
-      <h3>Add New Entry</h3>
-      <div class="form-group">
-        <label for="arabicInput">Arabic Text:</label><br />
-        <input type="text" id="arabicInput" placeholder="Arabic text here..." />
+    <!-- Admin Panel (displayed after login) -->
+    <div id="admin-container" class="card p-4" style="display:none;">
+      <div class="d-flex justify-content-end mb-3">
+        <button id="logoutBtn" class="btn btn-outline-danger">Logout</button>
       </div>
-      <div class="form-group">
-        <label for="englishInput">English Translation:</label><br />
-        <input type="text" id="englishInput" placeholder="English translation here..." />
+      <!-- Source Section -->
+      <h3 class="mb-3">Source</h3>
+      <div class="mb-3">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="sourceType" id="sourceQuran" value="quran" checked>
+          <label class="form-check-label" for="sourceQuran">Quran</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="sourceType" id="sourceHadith" value="hadith">
+          <label class="form-check-label" for="sourceHadith">Hadith</label>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="themeInput">Theme Tag:</label><br />
-        <input type="text" id="themeInput" placeholder="e.g. Reminder, Du'a, etc." />
+      <!-- Quran Section -->
+      <div id="quranSection">
+        <div class="mb-3 autocomplete-container">
+          <label for="quranSurah" class="form-label">Surah:</label>
+          <input type="text" id="quranSurah" class="form-control" placeholder="Type surah number or name">
+          <div id="quranSurahSuggestions" class="suggestions"></div>
+        </div>
+        <div class="mb-3">
+          <label for="quranAyah" class="form-label">Ayah Number:</label>
+          <input type="number" id="quranAyah" class="form-control" placeholder="Enter ayah number">
+        </div>
+        <div class="mb-3">
+          <label for="quranArabic" class="form-label">Arabic Text:</label>
+          <textarea id="quranArabic" class="form-control arabic-input" rows="3" placeholder="Auto-filled Arabic text"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="quranEnglish" class="form-label">English Translation:</label>
+          <textarea id="quranEnglish" class="form-control" rows="3" placeholder="Auto-filled English translation"></textarea>
+        </div>
       </div>
-
-      <!-- Autocomplete + multi-select for Weather Conditions -->
-      <div class="form-group autocomplete-container">
-        <label for="conditionSearch">Add Condition(s):</label><br />
-        <input type="text" id="conditionSearch" placeholder="Type to search (e.g. rain, sunny, snow)..." />
+      <!-- Hadith Section -->
+      <div id="hadithSection" class="d-none">
+        <div class="mb-3">
+          <label for="hadithAuthor" class="form-label">Hadith Author:</label>
+          <input type="text" id="hadithAuthor" class="form-control" list="hadithAuthorsList" placeholder="Type or select author">
+          <datalist id="hadithAuthorsList"></datalist>
+        </div>
+        <div class="mb-3">
+          <label for="hadithNumber" class="form-label">Hadith Number:</label>
+          <input type="number" id="hadithNumber" class="form-control" placeholder="Enter hadith number">
+        </div>
+        <div class="mb-3">
+          <label for="hadithArabic" class="form-label">Arabic Text:</label>
+          <textarea id="hadithArabic" class="form-control arabic-input" rows="3" placeholder="Enter hadith Arabic text"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="hadithEnglish" class="form-label">English Translation:</label>
+          <textarea id="hadithEnglish" class="form-control" rows="3" placeholder="Enter hadith English translation"></textarea>
+        </div>
+      </div>
+      <!-- Common Fields -->
+      <div class="mb-3">
+        <label for="themeInput" class="form-label">Theme Tag (optional):</label>
+        <input type="text" id="themeInput" class="form-control" placeholder="e.g. Reminder, Du'a, etc.">
+      </div>
+      <!-- Weather Selection -->
+      <div class="mb-3">
+        <label class="form-label">Weather Selection Mode:</label>
+        <div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="weatherMode" id="weatherGroupMode" value="group" checked>
+            <label class="form-check-label" for="weatherGroupMode">Group</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="weatherMode" id="weatherCustomMode" value="custom">
+            <label class="form-check-label" for="weatherCustomMode">Custom</label>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3" id="weatherGroupContainer">
+        <label for="weatherGroupSelect" class="form-label">Select Weather Group:</label>
+        <select id="weatherGroupSelect" class="form-select">
+          <option value="">-- Select a group --</option>
+          <option value="Clear">Clear</option>
+          <option value="Cloudy">Cloudy</option>
+          <option value="Rain">Rain</option>
+          <option value="Snow">Snow</option>
+          <option value="Sleet">Sleet</option>
+          <option value="Drizzle">Drizzle</option>
+          <option value="Fog">Fog</option>
+          <option value="Thunder">Thunder</option>
+          <option value="Ice">Ice</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="mb-3 d-none" id="weatherCustomContainer">
+        <label for="conditionSearch" class="form-label">Add Weather Condition(s):</label>
+        <input type="text" id="conditionSearch" class="form-control" placeholder="Type to search (e.g. rain, sunny, etc.)">
         <div id="conditionSuggestions" class="suggestions"></div>
         <div id="selectedConditions" class="chips"></div>
       </div>
-
-      <button id="addBtn">Add Entry</button>
-      <div class="error" id="addError"></div>
-      <div class="success" id="addSuccess"></div>
+      <!-- Dua Timing -->
+      <div class="mb-3">
+        <label for="duaTimingMode" class="form-label">Dua Timing:</label>
+        <select id="duaTimingMode" class="form-select">
+          <option value="none" selected>No Special Timing</option>
+          <option value="before">Before</option>
+          <option value="after">After</option>
+          <option value="both">Before and After</option>
+        </select>
+      </div>
+      <div id="duaTimingOptions" class="row d-none mb-3">
+        <div class="col-md-6 mb-2">
+          <label for="duaEventSelect" class="form-label">Select Event:</label>
+          <select id="duaEventSelect" class="form-select">
+            <option value="">-- Select an event --</option>
+            <option value="Fajr">Fajr</option>
+            <option value="Fajr-Jamaat">Fajr-Jamaat</option>
+            <option value="Sunrise">Sunrise</option>
+            <option value="Dhuhr">Dhuhr</option>
+            <option value="Dhuhr-Jamaat">Dhuhr-Jamaat</option>
+            <option value="Asr">Asr</option>
+            <option value="Asr-Jamaat">Asr-Jamaat</option>
+            <option value="Maghrib">Maghrib</option>
+            <option value="Isha">Isha</option>
+            <option value="Isha-Jamaat">Isha-Jamaat</option>
+          </select>
+        </div>
+        <div class="col-md-6 mb-2">
+          <label for="duaDuration" class="form-label">Duration (minutes):</label>
+          <input type="number" id="duaDuration" class="form-control" placeholder="e.g. 10">
+        </div>
+      </div>
+      <!-- Day-of-Week Section -->
+      <div class="mb-3">
+        <label class="form-label">Display on Specific Day(s):</label>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input day-checkbox" id="daySunday" value="Sunday">
+          <label class="form-check-label" for="daySunday">Sunday</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input day-checkbox" id="dayMonday" value="Monday">
+          <label class="form-check-label" for="dayMonday">Monday</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input day-checkbox" id="dayTuesday" value="Tuesday">
+          <label class="form-check-label" for="dayTuesday">Tuesday</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input day-checkbox" id="dayWednesday" value="Wednesday">
+          <label class="form-check-label" for="dayWednesday">Wednesday</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input day-checkbox" id="dayThursday" value="Thursday">
+          <label class="form-check-label" for="dayThursday">Thursday</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input day-checkbox" id="dayFriday" value="Friday">
+          <label class="form-check-label" for="dayFriday">Friday</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input day-checkbox" id="daySaturday" value="Saturday">
+          <label class="form-check-label" for="daySaturday">Saturday</label>
+        </div>
+        <small class="form-text">Leave unchecked if not day‑specific.</small>
+      </div>
+      <button type="button" id="addBtn" class="btn btn-success">Add Entry</button>
+      <div class="mt-2">
+        <span class="text-danger" id="addError"></span>
+        <span class="text-success" id="addSuccess"></span>
+      </div>
+      <!-- Existing Entries Table -->
+      <h3 class="mt-4">Existing Entries</h3>
+      <div class="table-responsive">
+        <table id="entriesTable" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Arabic</th>
+              <th>English</th>
+              <th>Theme</th>
+              <th>Source</th>
+              <th>Weather</th>
+              <th>Dua Timing</th>
+              <th>Days</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="entriesBody">
+          </tbody>
+        </table>
+      </div>
     </div>
-
-    <!-- TABLE OF EXISTING ENTRIES -->
-    <h3>Existing Entries</h3>
-    <table id="entriesTable">
-      <thead>
-        <tr>
-          <th>Arabic</th>
-          <th>English</th>
-          <th>Theme</th>
-          <th>Conditions (Codes)</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="entriesBody">
-        <!-- Filled dynamically by JS -->
-      </tbody>
-    </table>
   </div>
-
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Firebase + Admin Logic -->
   <script type="module">
-    // Import Firebase modules and config
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      getDocs,
-      doc,
-      deleteDoc,
-      updateDoc
-    } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
     import { firebaseConfig } from "./fbConfig.js";
 
-    // ------------- WEATHER CONDITIONS DATA -------------
-    const weatherConditions = [
-      {"code":1000,"day":"Sunny","night":"Clear","icon":113},
-      {"code":1003,"day":"Partly cloudy","night":"Partly cloudy","icon":116},
-      {"code":1006,"day":"Cloudy","night":"Cloudy","icon":119},
-      {"code":1009,"day":"Overcast","night":"Overcast","icon":122},
-      {"code":1030,"day":"Mist","night":"Mist","icon":143},
-      {"code":1063,"day":"Patchy rain possible","night":"Patchy rain possible","icon":176},
-      {"code":1066,"day":"Patchy snow possible","night":"Patchy snow possible","icon":179},
-      {"code":1069,"day":"Patchy sleet possible","night":"Patchy sleet possible","icon":182},
-      {"code":1072,"day":"Patchy freezing drizzle possible","night":"Patchy freezing drizzle possible","icon":185},
-      {"code":1087,"day":"Thundery outbreaks possible","night":"Thundery outbreaks possible","icon":200},
-      {"code":1114,"day":"Blowing snow","night":"Blowing snow","icon":227},
-      {"code":1117,"day":"Blizzard","night":"Blizzard","icon":230},
-      {"code":1135,"day":"Fog","night":"Fog","icon":248},
-      {"code":1147,"day":"Freezing fog","night":"Freezing fog","icon":260},
-      {"code":1150,"day":"Patchy light drizzle","night":"Patchy light drizzle","icon":263},
-      {"code":1153,"day":"Light drizzle","night":"Light drizzle","icon":266},
-      {"code":1168,"day":"Freezing drizzle","night":"Freezing drizzle","icon":281},
-      {"code":1171,"day":"Heavy freezing drizzle","night":"Heavy freezing drizzle","icon":284},
-      {"code":1180,"day":"Patchy light rain","night":"Patchy light rain","icon":293},
-      {"code":1183,"day":"Light rain","night":"Light rain","icon":296},
-      {"code":1186,"day":"Moderate rain at times","night":"Moderate rain at times","icon":299},
-      {"code":1189,"day":"Moderate rain","night":"Moderate rain","icon":302},
-      {"code":1192,"day":"Heavy rain at times","night":"Heavy rain at times","icon":305},
-      {"code":1195,"day":"Heavy rain","night":"Heavy rain","icon":308},
-      {"code":1198,"day":"Light freezing rain","night":"Light freezing rain","icon":311},
-      {"code":1201,"day":"Moderate or heavy freezing rain","night":"Moderate or heavy freezing rain","icon":314},
-      {"code":1204,"day":"Light sleet","night":"Light sleet","icon":317},
-      {"code":1207,"day":"Moderate or heavy sleet","night":"Moderate or heavy sleet","icon":320},
-      {"code":1210,"day":"Patchy light snow","night":"Patchy light snow","icon":323},
-      {"code":1213,"day":"Light snow","night":"Light snow","icon":326},
-      {"code":1216,"day":"Patchy moderate snow","night":"Patchy moderate snow","icon":329},
-      {"code":1219,"day":"Moderate snow","night":"Moderate snow","icon":332},
-      {"code":1222,"day":"Patchy heavy snow","night":"Patchy heavy snow","icon":335},
-      {"code":1225,"day":"Heavy snow","night":"Heavy snow","icon":338},
-      {"code":1237,"day":"Ice pellets","night":"Ice pellets","icon":350},
-      {"code":1240,"day":"Light rain shower","night":"Light rain shower","icon":353},
-      {"code":1243,"day":"Moderate or heavy rain shower","night":"Moderate or heavy rain shower","icon":356},
-      {"code":1246,"day":"Torrential rain shower","night":"Torrential rain shower","icon":359},
-      {"code":1249,"day":"Light sleet showers","night":"Light sleet showers","icon":362},
-      {"code":1252,"day":"Moderate or heavy sleet showers","night":"Moderate or heavy sleet showers","icon":365},
-      {"code":1255,"day":"Light snow showers","night":"Light snow showers","icon":368},
-      {"code":1258,"day":"Moderate or heavy snow showers","night":"Moderate or heavy snow showers","icon":371},
-      {"code":1261,"day":"Light showers of ice pellets","night":"Light showers of ice pellets","icon":374},
-      {"code":1264,"day":"Moderate or heavy showers of ice pellets","night":"Moderate or heavy showers of ice pellets","icon":377},
-      {"code":1273,"day":"Patchy light rain with thunder","night":"Patchy light rain with thunder","icon":386},
-      {"code":1276,"day":"Moderate or heavy rain with thunder","night":"Moderate or heavy rain with thunder","icon":389},
-      {"code":1279,"day":"Patchy light snow with thunder","night":"Patchy light snow with thunder","icon":392},
-      {"code":1282,"day":"Moderate or heavy snow with thunder","night":"Moderate or heavy snow with thunder","icon":395}
-    ];
+    // Global variables for Firebase, Quran data, etc.
+    let auth, db;
+    let quranData = [];
+    let surahList = [];
+    let selectedSurah = null;
 
-    // ------------- DOM ELEMENTS -------------
+    // ------------------ Load Quran CSV ------------------
+    async function loadQuranCSV() {
+      try {
+        const response = await fetch("Quran.csv");
+        const csvText = await response.text();
+        const lines = csvText.split("\n").filter(line => line.trim() !== "");
+        const headers = lines[0].split(",");
+        quranData = lines.slice(1).map(line => {
+          const values = line.split(",");
+          let obj = {};
+          headers.forEach((header, idx) => {
+            obj[header.trim()] = values[idx] ? values[idx].trim() : "";
+          });
+          return {
+            surah_no: obj.surah_no,
+            surah_name_roman: obj.surah_name_roman,
+            ayah_no_surah: obj.ayah_no_surah,
+            ayah_ar: obj.ayah_ar,
+            ayah_en: obj.ayah_en,
+            total_ayah_surah: obj.total_ayah_surah
+          };
+        });
+        // Build unique surah list
+        let surahMap = {};
+        quranData.forEach(item => {
+          if (!surahMap[item.surah_no]) {
+            surahMap[item.surah_no] = {
+              surah_no: item.surah_no,
+              surah_name_roman: item.surah_name_roman,
+              total_ayah_surah: item.total_ayah_surah
+            };
+          }
+        });
+        surahList = Object.values(surahMap);
+      } catch (error) {
+        console.error("Error loading Quran CSV:", error);
+      }
+    }
+
+    // ------------------ DOM Elements ------------------
     const loginForm = document.getElementById("login-form");
     const loginBtn = document.getElementById("loginBtn");
     const loginEmail = document.getElementById("loginEmail");
     const loginPassword = document.getElementById("loginPassword");
     const loginError = document.getElementById("loginError");
-
     const adminContainer = document.getElementById("admin-container");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    const arabicInput = document.getElementById("arabicInput");
-    const englishInput = document.getElementById("englishInput");
+    // Quran Section
+    const quranSection = document.getElementById("quranSection");
+    const quranSurah = document.getElementById("quranSurah");
+    const quranSurahSuggestions = document.getElementById("quranSurahSuggestions");
+    const quranAyah = document.getElementById("quranAyah");
+    const quranArabic = document.getElementById("quranArabic");
+    const quranEnglish = document.getElementById("quranEnglish");
+
+    // Hadith Section
+    const hadithSection = document.getElementById("hadithSection");
+    const hadithAuthor = document.getElementById("hadithAuthor");
+    const hadithNumber = document.getElementById("hadithNumber");
+    const hadithArabic = document.getElementById("hadithArabic");
+    const hadithEnglish = document.getElementById("hadithEnglish");
+    const hadithAuthorsList = document.getElementById("hadithAuthorsList");
+
+    // Source Radios
+    const sourceQuran = document.getElementById("sourceQuran");
+    const sourceHadith = document.getElementById("sourceHadith");
+
+    // Common Fields
     const themeInput = document.getElementById("themeInput");
 
-    const addBtn = document.getElementById("addBtn");
-    const addError = document.getElementById("addError");
-    const addSuccess = document.getElementById("addSuccess");
-
-    const entriesBody = document.getElementById("entriesBody");
-
-    // Autocomplete + multi-select
+    // Weather Selection
+    const weatherGroupMode = document.getElementById("weatherGroupMode");
+    const weatherCustomMode = document.getElementById("weatherCustomMode");
+    const weatherGroupContainer = document.getElementById("weatherGroupContainer");
+    const weatherCustomContainer = document.getElementById("weatherCustomContainer");
+    const weatherGroupSelect = document.getElementById("weatherGroupSelect");
     const conditionSearch = document.getElementById("conditionSearch");
     const conditionSuggestions = document.getElementById("conditionSuggestions");
     const selectedConditionsEl = document.getElementById("selectedConditions");
 
-    // We'll store selected weather codes in this array
-    let selectedConditions = [];
+    // Dua Timing
+    const duaTimingMode = document.getElementById("duaTimingMode");
+    const duaTimingOptions = document.getElementById("duaTimingOptions");
+    const duaEventSelect = document.getElementById("duaEventSelect");
+    const duaDuration = document.getElementById("duaDuration");
 
-    let auth, db;
+    // Day-specific checkboxes
+    const dayCheckboxes = document.querySelectorAll('.day-checkbox');
 
-    // ------------- INITIALIZE FIREBASE -------------
-    function initFirebase() {
+    // Add Entry Buttons and Feedback
+    const addBtn = document.getElementById("addBtn");
+    const addError = document.getElementById("addError");
+    const addSuccess = document.getElementById("addSuccess");
+    const entriesBody = document.getElementById("entriesBody");
+
+    // For custom weather conditions (store descriptive text)
+    let selectedCustomConditions = [];
+
+    // ------------------ Theme Toggle ------------------
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+      localStorage.setItem('theme', theme);
+    }
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+      setTheme(storedTheme);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark');
+    }
+    themeToggleBtn.addEventListener('click', () => {
+      if (document.body.classList.contains('dark-mode')) {
+        setTheme('light');
+      } else {
+        setTheme('dark');
+      }
+    });
+
+    // ------------------ Toggle Source Fields ------------------
+    function toggleSourceFields() {
+      if (sourceQuran.checked) {
+        quranSection.classList.remove('d-none');
+        hadithSection.classList.add('d-none');
+      } else {
+        quranSection.classList.add('d-none');
+        hadithSection.classList.remove('d-none');
+      }
+    }
+    sourceQuran.addEventListener('change', toggleSourceFields);
+    sourceHadith.addEventListener('change', toggleSourceFields);
+    toggleSourceFields();
+
+    // ------------------ Toggle Weather Mode UI ------------------
+    function toggleWeatherMode() {
+      if (weatherGroupMode.checked) {
+        weatherGroupContainer.classList.remove('d-none');
+        weatherCustomContainer.classList.add('d-none');
+      } else {
+        weatherGroupContainer.classList.add('d-none');
+        weatherCustomContainer.classList.remove('d-none');
+      }
+    }
+    weatherGroupMode.addEventListener('change', toggleWeatherMode);
+    weatherCustomMode.addEventListener('change', toggleWeatherMode);
+    toggleWeatherMode();
+
+    // ------------------ Toggle Dua Timing Options ------------------
+    duaTimingMode.addEventListener('change', () => {
+      if (duaTimingMode.value === 'none') {
+        duaTimingOptions.classList.add('d-none');
+      } else {
+        duaTimingOptions.classList.remove('d-none');
+      }
+    });
+
+    // ------------------ Quran Surah Autocomplete ------------------
+    function showSurahSuggestions(list) {
+      quranSurahSuggestions.innerHTML = "";
+      list.forEach(item => {
+        const suggestionItem = document.createElement("div");
+        suggestionItem.className = "suggestion-item";
+        suggestionItem.textContent = `${item.surah_no}: ${item.surah_name_roman}`;
+        suggestionItem.addEventListener("click", () => {
+          quranSurah.value = `${item.surah_no}: ${item.surah_name_roman}`;
+          selectedSurah = item;
+          quranSurahSuggestions.innerHTML = "";
+          // Clear ayah input and text areas
+          quranAyah.value = "";
+          quranArabic.value = "";
+          quranEnglish.value = "";
+        });
+        quranSurahSuggestions.appendChild(suggestionItem);
+      });
+    }
+    quranSurah.addEventListener("input", () => {
+      const query = quranSurah.value.toLowerCase().trim();
+      if (!query) {
+        quranSurahSuggestions.innerHTML = "";
+        return;
+      }
+      const filtered = surahList.filter(item =>
+        item.surah_no.toString().includes(query) || item.surah_name_roman.toLowerCase().includes(query)
+      );
+      showSurahSuggestions(filtered);
+    });
+    document.addEventListener("click", (e) => {
+      if (!quranSurahSuggestions.contains(e.target) && e.target !== quranSurah) {
+        quranSurahSuggestions.innerHTML = "";
+      }
+    });
+
+    // ------------------ Quran Ayah Auto-fill ------------------
+    function autofillQuranAyah() {
+      const ayahNum = quranAyah.value.trim();
+      if (!selectedSurah || !ayahNum) return;
+      const match = quranData.find(item =>
+        item.surah_no === selectedSurah.surah_no && item.ayah_no_surah === ayahNum
+      );
+      if (match) {
+        quranArabic.value = match.ayah_ar;
+        quranEnglish.value = match.ayah_en;
+      } else {
+        quranArabic.value = "";
+        quranEnglish.value = "";
+      }
+    }
+    quranAyah.addEventListener("change", autofillQuranAyah);
+
+    // ------------------ Custom Weather Autocomplete ------------------
+    function renderCustomConditions() {
+      selectedConditionsEl.innerHTML = "";
+      selectedCustomConditions.forEach((cond) => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        const span = document.createElement("span");
+        span.textContent = cond;
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "x";
+        removeBtn.addEventListener("click", () => {
+          selectedCustomConditions = selectedCustomConditions.filter(c => c !== cond);
+          renderCustomConditions();
+        });
+        chip.appendChild(span);
+        chip.appendChild(removeBtn);
+        selectedConditionsEl.appendChild(chip);
+      });
+    }
+    function showSuggestions(list) {
+      conditionSuggestions.innerHTML = "";
+      list.forEach(item => {
+        const suggestionItem = document.createElement("div");
+        suggestionItem.className = "suggestion-item";
+        suggestionItem.textContent = item.day;
+        suggestionItem.addEventListener("click", () => {
+          if (!selectedCustomConditions.includes(item.day)) {
+            selectedCustomConditions.push(item.day);
+            renderCustomConditions();
+          }
+          conditionSearch.value = "";
+          conditionSuggestions.innerHTML = "";
+        });
+        conditionSuggestions.appendChild(suggestionItem);
+      });
+    }
+    conditionSearch.addEventListener("input", () => {
+      const query = conditionSearch.value.toLowerCase().trim();
+      if (!query) {
+        conditionSuggestions.innerHTML = "";
+        return;
+      }
+      const filtered = weatherConditions.filter(item =>
+        item.day.toLowerCase().includes(query)
+      );
+      showSuggestions(filtered);
+    });
+    document.addEventListener("click", (e) => {
+      if (!conditionSuggestions.contains(e.target) && e.target !== conditionSearch) {
+        conditionSuggestions.innerHTML = "";
+      }
+    });
+
+    // ------------------ Initialize Firebase and Load Quran CSV ------------------
+    async function initApp() {
       const app = initializeApp(firebaseConfig);
       auth = getAuth(app);
       db = getFirestore(app);
-
+      await loadQuranCSV();
       onAuthStateChanged(auth, (user) => {
         if (user) {
           loginForm.style.display = "none";
@@ -279,79 +606,102 @@
       });
     }
 
-    // ------------- AUTH EVENTS -------------
-    loginBtn.addEventListener("click", async () => {
-      loginError.textContent = "";
-      try {
-        await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
-      } catch (error) {
-        loginError.textContent = error.message;
-      }
-    });
+    // ------------------ Update Hadith Authors Datalist ------------------
+    function updateHadithAuthorsDatalist(entries) {
+      const authors = new Set();
+      entries.forEach(entry => {
+        if (entry.source && entry.source.type === "hadith" && entry.source.author) {
+          authors.add(entry.source.author);
+        }
+      });
+      hadithAuthorsList.innerHTML = "";
+      authors.forEach(author => {
+        const option = document.createElement("option");
+        option.value = author;
+        hadithAuthorsList.appendChild(option);
+      });
+    }
 
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-    });
-
-    // ------------- FIRESTORE CRUD -------------
+    // ------------------ Firestore CRUD ------------------
     async function loadEntries() {
-      entriesBody.innerHTML = ""; // clear table first
-
+      entriesBody.innerHTML = "";
+      let allEntries = [];
       try {
         const colRef = collection(db, "verses");
         const snapshot = await getDocs(colRef);
-
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
+          data.id = docSnap.id;
+          allEntries.push(data);
           const row = document.createElement("tr");
-
           const arabicTd = document.createElement("td");
-          arabicTd.textContent = data.arabic || "";
-
+          arabicTd.textContent = data.source && data.source.arabic ? data.source.arabic : "";
+          arabicTd.classList.add("arabic-input");
           const englishTd = document.createElement("td");
-          englishTd.textContent = data.english || "";
-
+          englishTd.textContent = data.source && data.source.english ? data.source.english : "";
           const themeTd = document.createElement("td");
           themeTd.textContent = data.theme || "";
-
-          const conditionsTd = document.createElement("td");
-          if (Array.isArray(data.conditions)) {
-            conditionsTd.textContent = data.conditions.join(", ");
+          const sourceTd = document.createElement("td");
+          if(data.source) {
+            if(data.source.type === "quran") {
+              sourceTd.textContent = `Quran - Surah ${data.source.surah} (${data.source.surahName}), Ayah ${data.source.ayah}`;
+            } else if(data.source.type === "hadith") {
+              sourceTd.textContent = `Hadith - ${data.source.author}, #${data.source.number}`;
+            }
           } else {
-            conditionsTd.textContent = "";
+            sourceTd.textContent = "";
           }
-
+          const weatherTd = document.createElement("td");
+          if (data.weather) {
+            weatherTd.textContent = data.weather.mode === "group" ? data.weather.value : data.weather.value.join(", ");
+          } else {
+            weatherTd.textContent = "";
+          }
+          const duaTd = document.createElement("td");
+          if (data.duaTiming) {
+            let duaText = data.duaTiming.timingMode;
+            if (data.duaTiming.event) duaText += " (" + data.duaTiming.event + ")";
+            if (data.duaTiming.duration) duaText += " - " + data.duaTiming.duration + " min";
+            duaTd.textContent = duaText;
+          } else {
+            duaTd.textContent = "";
+          }
+          const daysTd = document.createElement("td");
+          if (data.days && data.days.length > 0) {
+            daysTd.textContent = data.days.join(", ");
+          } else {
+            daysTd.textContent = "None";
+          }
           const actionsTd = document.createElement("td");
-
           const delBtn = document.createElement("button");
           delBtn.textContent = "Delete";
-          delBtn.style.marginRight = "6px";
-          delBtn.addEventListener("click", () => deleteEntry(docSnap.id));
-
+          delBtn.classList.add("btn", "btn-sm", "btn-danger", "me-1");
+          delBtn.addEventListener("click", () => deleteEntry(data.id));
           const editBtn = document.createElement("button");
           editBtn.textContent = "Edit";
+          editBtn.classList.add("btn", "btn-sm", "btn-secondary");
           editBtn.addEventListener("click", () => {
-            const newArabic = prompt("Update Arabic text:", data.arabic);
-            const newEnglish = prompt("Update English text:", data.english);
+            const newArabic = prompt("Update Arabic text:", data.source ? data.source.arabic : "");
+            const newEnglish = prompt("Update English text:", data.source ? data.source.english : "");
             const newTheme = prompt("Update Theme:", data.theme);
-            updateEntry(docSnap.id, {
-              arabic: newArabic,
-              english: newEnglish,
+            updateEntry(data.id, {
+              source: { ...data.source, arabic: newArabic, english: newEnglish },
               theme: newTheme
             });
           });
-
           actionsTd.appendChild(editBtn);
           actionsTd.appendChild(delBtn);
-
           row.appendChild(arabicTd);
           row.appendChild(englishTd);
           row.appendChild(themeTd);
-          row.appendChild(conditionsTd);
+          row.appendChild(sourceTd);
+          row.appendChild(weatherTd);
+          row.appendChild(duaTd);
+          row.appendChild(daysTd);
           row.appendChild(actionsTd);
-
           entriesBody.appendChild(row);
         });
+        updateHadithAuthorsDatalist(allEntries);
       } catch (error) {
         console.error("Error loading entries:", error);
       }
@@ -360,31 +710,98 @@
     async function addEntry() {
       addError.textContent = "";
       addSuccess.textContent = "";
-
-      const arabicVal = arabicInput.value.trim();
-      const englishVal = englishInput.value.trim();
-      const themeVal = themeInput.value.trim();
-
-      if (!arabicVal || !englishVal) {
-        addError.textContent = "Arabic and English fields are required.";
-        return;
+      let sourceData = null;
+      if (sourceQuran.checked) {
+        if (!selectedSurah) {
+          addError.textContent = "Please select a surah from the suggestions.";
+          return;
+        }
+        const ayah = quranAyah.value.trim();
+        if (!ayah) {
+          addError.textContent = "Please enter an ayah number.";
+          return;
+        }
+        sourceData = {
+          type: "quran",
+          surah: selectedSurah.surah_no,
+          surahName: selectedSurah.surah_name_roman,
+          ayah: ayah,
+          arabic: quranArabic.value.trim(),
+          english: quranEnglish.value.trim()
+        };
+      } else {
+        const author = hadithAuthor.value.trim();
+        const number = hadithNumber.value.trim();
+        if (!author || !number) {
+          addError.textContent = "For Hadith, please provide both author and number.";
+          return;
+        }
+        sourceData = {
+          type: "hadith",
+          author: author,
+          number: number,
+          arabic: hadithArabic.value.trim(),
+          english: hadithEnglish.value.trim()
+        };
       }
-
+      const themeVal = themeInput.value.trim();
+      let weatherData = null;
+      if (weatherGroupMode.checked) {
+        const group = weatherGroupSelect.value;
+        if (group) {
+          weatherData = { mode: "group", value: group };
+        }
+      } else {
+        if (selectedCustomConditions.length > 0) {
+          weatherData = { mode: "custom", value: selectedCustomConditions };
+        }
+      }
+      let duaData = null;
+      if (duaTimingMode.value !== "none") {
+        duaData = {
+          timingMode: duaTimingMode.value,
+          event: duaEventSelect.value || null,
+          duration: duaDuration.value ? parseInt(duaDuration.value) : null
+        };
+      }
+      let selectedDays = [];
+      dayCheckboxes.forEach(chk => {
+        if (chk.checked) {
+          selectedDays.push(chk.value);
+        }
+      });
       try {
         const colRef = collection(db, "verses");
         await addDoc(colRef, {
-          arabic: arabicVal,
-          english: englishVal,
+          source: sourceData,
           theme: themeVal,
-          conditions: selectedConditions
+          weather: weatherData,
+          duaTiming: duaData,
+          days: selectedDays
         });
         addSuccess.textContent = "Entry added successfully!";
-        arabicInput.value = "";
-        englishInput.value = "";
+        if (sourceQuran.checked) {
+          quranSurah.value = "";
+          quranAyah.value = "";
+          quranArabic.value = "";
+          quranEnglish.value = "";
+          selectedSurah = null;
+        } else {
+          hadithAuthor.value = "";
+          hadithNumber.value = "";
+          hadithArabic.value = "";
+          hadithEnglish.value = "";
+        }
         themeInput.value = "";
-        selectedConditions = [];
-        renderSelectedConditions();
+        weatherGroupSelect.value = "";
+        selectedCustomConditions = [];
+        renderCustomConditions();
         conditionSearch.value = "";
+        duaTimingMode.value = "none";
+        duaTimingOptions.classList.add("d-none");
+        duaEventSelect.value = "";
+        duaDuration.value = "";
+        dayCheckboxes.forEach(chk => chk.checked = false);
         loadEntries();
       } catch (error) {
         addError.textContent = error.message;
@@ -409,73 +826,8 @@
       }
     }
 
-    // ------------- AUTOCOMPLETE + MULTI-SELECT LOGIC -------------
-    function renderSelectedConditions() {
-      selectedConditionsEl.innerHTML = "";
-      selectedConditions.forEach((code) => {
-        const conditionObj = weatherConditions.find(c => c.code === code);
-        const label = conditionObj
-          ? `${conditionObj.day} (${conditionObj.code})`
-          : `Unknown (${code})`;
-
-        const chip = document.createElement("div");
-        chip.className = "chip";
-        const span = document.createElement("span");
-        span.textContent = label;
-
-        const removeBtn = document.createElement("button");
-        removeBtn.textContent = "x";
-        removeBtn.addEventListener("click", () => {
-          selectedConditions = selectedConditions.filter(c => c !== code);
-          renderSelectedConditions();
-        });
-
-        chip.appendChild(span);
-        chip.appendChild(removeBtn);
-        selectedConditionsEl.appendChild(chip);
-      });
-    }
-
-    function showSuggestions(list) {
-      conditionSuggestions.innerHTML = "";
-      list.forEach(item => {
-        const suggestionItem = document.createElement("div");
-        suggestionItem.className = "suggestion-item";
-        suggestionItem.textContent = `${item.day} (${item.code})`;
-        suggestionItem.addEventListener("click", () => {
-          if (!selectedConditions.includes(item.code)) {
-            selectedConditions.push(item.code);
-            renderSelectedConditions();
-          }
-          conditionSearch.value = "";
-          conditionSuggestions.innerHTML = "";
-        });
-        conditionSuggestions.appendChild(suggestionItem);
-      });
-    }
-
-    conditionSearch.addEventListener("input", () => {
-      const query = conditionSearch.value.toLowerCase().trim();
-      if (!query) {
-        conditionSuggestions.innerHTML = "";
-        return;
-      }
-      const filtered = weatherConditions.filter(item =>
-        item.day.toLowerCase().includes(query) ||
-        item.night.toLowerCase().includes(query)
-      );
-      showSuggestions(filtered);
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!conditionSuggestions.contains(e.target) && e.target !== conditionSearch) {
-        conditionSuggestions.innerHTML = "";
-      }
-    });
-
     addBtn.addEventListener("click", addEntry);
-
-    window.addEventListener("DOMContentLoaded", initFirebase);
+    window.addEventListener("DOMContentLoaded", initApp);
   </script>
 </body>
 </html>
