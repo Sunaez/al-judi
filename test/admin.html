@@ -141,9 +141,15 @@
           <input type="text" id="quranSurah" class="form-control" placeholder="Type surah number or name">
           <div id="quranSurahSuggestions" class="suggestions"></div>
         </div>
-        <div class="mb-3">
-          <label for="quranAyah" class="form-label">Ayah Number:</label>
-          <input type="number" id="quranAyah" class="form-control" placeholder="Enter ayah number">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="quranStartAyah" class="form-label">Start Ayah:</label>
+            <input type="number" id="quranStartAyah" class="form-control" placeholder="e.g. 1">
+          </div>
+          <div class="col-md-6">
+            <label for="quranEndAyah" class="form-label">End Ayah (optional):</label>
+            <input type="number" id="quranEndAyah" class="form-control" placeholder="e.g. 5">
+          </div>
         </div>
         <div class="mb-3">
           <label for="quranArabic" class="form-label">Arabic Text:</label>
@@ -301,39 +307,47 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="entriesBody">
-          </tbody>
+          <tbody id="entriesBody"></tbody>
         </table>
       </div>
     </div>
   </div>
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Firebase + Admin Logic -->
+  <!-- Firebase and Admin Logic -->
   <script type="module">
+    // Inline Firebase configuration (public keys)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkloxT5KTmy_CWe6FSsAYHykgdfoN_Gpo",
+      authDomain: "al-judimasjid.firebaseapp.com",
+      projectId: "al-judimasjid",
+      storageBucket: "al-judimasjid.firebasestorage.app",
+      messagingSenderId: "706961330765",
+      appId: "1:706961330765:web:cb3f6d734d41476f54c204",
+      measurementId: "G-MRKVDQ6PPG"
+    };
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-    import { firebaseConfig } from "./fbConfig.js";
 
-    // Global variables for Firebase, Quran data, etc.
     let auth, db;
+    // Quran CSV data and surah list
     let quranData = [];
     let surahList = [];
     let selectedSurah = null;
 
-    // ------------------ Load Quran CSV ------------------
     async function loadQuranCSV() {
       try {
         const response = await fetch("Quran.csv");
         const csvText = await response.text();
         const lines = csvText.split("\n").filter(line => line.trim() !== "");
-        const headers = lines[0].split(",");
+        const headers = lines[0].split(",").map(h => h.trim());
         quranData = lines.slice(1).map(line => {
-          const values = line.split(",");
+          const values = line.split(",").map(v => v.trim());
           let obj = {};
           headers.forEach((header, idx) => {
-            obj[header.trim()] = values[idx] ? values[idx].trim() : "";
+            obj[header] = values[idx] || "";
           });
           return {
             surah_no: obj.surah_no,
@@ -374,7 +388,9 @@
     const quranSection = document.getElementById("quranSection");
     const quranSurah = document.getElementById("quranSurah");
     const quranSurahSuggestions = document.getElementById("quranSurahSuggestions");
-    const quranAyah = document.getElementById("quranAyah");
+    const quranStartAyah = document.getElementById("quranStartAyah") || document.getElementById("quranAyah"); // in case we need single field fallback
+    const quranAyahField = document.getElementById("quranStartAyah");
+    const quranEndAyah = document.getElementById("quranEndAyah");
     const quranArabic = document.getElementById("quranArabic");
     const quranEnglish = document.getElementById("quranEnglish");
 
@@ -409,16 +425,16 @@
     const duaEventSelect = document.getElementById("duaEventSelect");
     const duaDuration = document.getElementById("duaDuration");
 
-    // Day-specific checkboxes
+    // Day-of-Week checkboxes
     const dayCheckboxes = document.querySelectorAll('.day-checkbox');
 
-    // Add Entry Buttons and Feedback
+    // Add Entry Feedback
     const addBtn = document.getElementById("addBtn");
     const addError = document.getElementById("addError");
     const addSuccess = document.getElementById("addSuccess");
     const entriesBody = document.getElementById("entriesBody");
 
-    // For custom weather conditions (store descriptive text)
+    // For custom weather conditions
     let selectedCustomConditions = [];
 
     // ------------------ Theme Toggle ------------------
@@ -493,8 +509,9 @@
           quranSurah.value = `${item.surah_no}: ${item.surah_name_roman}`;
           selectedSurah = item;
           quranSurahSuggestions.innerHTML = "";
-          // Clear ayah input and text areas
-          quranAyah.value = "";
+          // Clear ayah fields and text areas
+          quranStartAyah.value = "";
+          quranEndAyah.value = "";
           quranArabic.value = "";
           quranEnglish.value = "";
         });
@@ -518,22 +535,31 @@
       }
     });
 
-    // ------------------ Quran Ayah Auto-fill ------------------
-    function autofillQuranAyah() {
-      const ayahNum = quranAyah.value.trim();
-      if (!selectedSurah || !ayahNum) return;
-      const match = quranData.find(item =>
-        item.surah_no === selectedSurah.surah_no && item.ayah_no_surah === ayahNum
+    // ------------------ Quran Ayah Range Auto-fill ------------------
+    function autofillQuranAyahRange() {
+      const start = quranStartAyah.value.trim();
+      const end = quranEndAyah.value.trim();
+      if (!selectedSurah || !start) return;
+      // If end is not provided, use start as single ayah
+      const endAyah = end ? parseInt(end) : parseInt(start);
+      const startAyah = parseInt(start);
+      // Filter quranData for matching surah and ayah numbers within range
+      const matches = quranData.filter(item =>
+        item.surah_no === selectedSurah.surah_no && 
+        parseInt(item.ayah_no_surah) >= startAyah &&
+        parseInt(item.ayah_no_surah) <= endAyah
       );
-      if (match) {
-        quranArabic.value = match.ayah_ar;
-        quranEnglish.value = match.ayah_en;
+      if (matches.length > 0) {
+        // Concatenate texts with a separator (e.g., newline)
+        quranArabic.value = matches.map(m => m.ayah_ar).join("\n");
+        quranEnglish.value = matches.map(m => m.ayah_en).join("\n");
       } else {
         quranArabic.value = "";
         quranEnglish.value = "";
       }
     }
-    quranAyah.addEventListener("change", autofillQuranAyah);
+    quranStartAyah.addEventListener("change", autofillQuranAyahRange);
+    quranEndAyah.addEventListener("change", autofillQuranAyahRange);
 
     // ------------------ Custom Weather Autocomplete ------------------
     function renderCustomConditions() {
@@ -634,51 +660,57 @@
           data.id = docSnap.id;
           allEntries.push(data);
           const row = document.createElement("tr");
+          // For display, if source exists, show its Arabic and English
           const arabicTd = document.createElement("td");
-          arabicTd.textContent = data.source && data.source.arabic ? data.source.arabic : "";
-          arabicTd.classList.add("arabic-input");
           const englishTd = document.createElement("td");
-          englishTd.textContent = data.source && data.source.english ? data.source.english : "";
+          if(data.source) {
+            arabicTd.innerText = data.source.arabic || "";
+            englishTd.innerText = data.source.english || "";
+          } else {
+            arabicTd.innerText = "";
+            englishTd.innerText = "";
+          }
+          arabicTd.classList.add("arabic-input");
           const themeTd = document.createElement("td");
-          themeTd.textContent = data.theme || "";
+          themeTd.innerText = data.theme || "";
           const sourceTd = document.createElement("td");
           if(data.source) {
             if(data.source.type === "quran") {
-              sourceTd.textContent = `Quran - Surah ${data.source.surah} (${data.source.surahName}), Ayah ${data.source.ayah}`;
+              sourceTd.innerText = `Quran - Surah ${data.source.surah} (${data.source.surahName}), Ayah ${data.source.ayah}`;
             } else if(data.source.type === "hadith") {
-              sourceTd.textContent = `Hadith - ${data.source.author}, #${data.source.number}`;
+              sourceTd.innerText = `Hadith - ${data.source.author}, #${data.source.number}`;
             }
           } else {
-            sourceTd.textContent = "";
+            sourceTd.innerText = "";
           }
           const weatherTd = document.createElement("td");
           if (data.weather) {
-            weatherTd.textContent = data.weather.mode === "group" ? data.weather.value : data.weather.value.join(", ");
+            weatherTd.innerText = data.weather.mode === "group" ? data.weather.value : data.weather.value.join(", ");
           } else {
-            weatherTd.textContent = "";
+            weatherTd.innerText = "";
           }
           const duaTd = document.createElement("td");
           if (data.duaTiming) {
             let duaText = data.duaTiming.timingMode;
             if (data.duaTiming.event) duaText += " (" + data.duaTiming.event + ")";
             if (data.duaTiming.duration) duaText += " - " + data.duaTiming.duration + " min";
-            duaTd.textContent = duaText;
+            duaTd.innerText = duaText;
           } else {
-            duaTd.textContent = "";
+            duaTd.innerText = "";
           }
           const daysTd = document.createElement("td");
           if (data.days && data.days.length > 0) {
-            daysTd.textContent = data.days.join(", ");
+            daysTd.innerText = data.days.join(", ");
           } else {
-            daysTd.textContent = "None";
+            daysTd.innerText = "None";
           }
           const actionsTd = document.createElement("td");
           const delBtn = document.createElement("button");
-          delBtn.textContent = "Delete";
+          delBtn.innerText = "Delete";
           delBtn.classList.add("btn", "btn-sm", "btn-danger", "me-1");
           delBtn.addEventListener("click", () => deleteEntry(data.id));
           const editBtn = document.createElement("button");
-          editBtn.textContent = "Edit";
+          editBtn.innerText = "Edit";
           editBtn.classList.add("btn", "btn-sm", "btn-secondary");
           editBtn.addEventListener("click", () => {
             const newArabic = prompt("Update Arabic text:", data.source ? data.source.arabic : "");
@@ -708,24 +740,27 @@
     }
 
     async function addEntry() {
-      addError.textContent = "";
-      addSuccess.textContent = "";
+      addError.innerText = "";
+      addSuccess.innerText = "";
       let sourceData = null;
-      if (sourceQuran.checked) {
+      if(sourceQuran.checked) {
         if (!selectedSurah) {
-          addError.textContent = "Please select a surah from the suggestions.";
+          addError.innerText = "Please select a surah from the suggestions.";
           return;
         }
-        const ayah = quranAyah.value.trim();
-        if (!ayah) {
-          addError.textContent = "Please enter an ayah number.";
+        const startAyah = quranStartAyah.value.trim();
+        if (!startAyah) {
+          addError.innerText = "Please enter a start ayah number.";
           return;
         }
+        const endAyah = quranEndAyah.value.trim();
+        // Auto-fill should have been triggered; if not, call it manually.
+        autofillQuranAyahRange();
         sourceData = {
           type: "quran",
           surah: selectedSurah.surah_no,
           surahName: selectedSurah.surah_name_roman,
-          ayah: ayah,
+          ayah: endAyah ? `${startAyah}-${endAyah}` : startAyah,
           arabic: quranArabic.value.trim(),
           english: quranEnglish.value.trim()
         };
@@ -733,7 +768,7 @@
         const author = hadithAuthor.value.trim();
         const number = hadithNumber.value.trim();
         if (!author || !number) {
-          addError.textContent = "For Hadith, please provide both author and number.";
+          addError.innerText = "For Hadith, please provide both author and number.";
           return;
         }
         sourceData = {
@@ -779,10 +814,12 @@
           duaTiming: duaData,
           days: selectedDays
         });
-        addSuccess.textContent = "Entry added successfully!";
+        addSuccess.innerText = "Entry added successfully!";
+        // Reset fields
         if (sourceQuran.checked) {
           quranSurah.value = "";
-          quranAyah.value = "";
+          quranStartAyah.value = "";
+          quranEndAyah.value = "";
           quranArabic.value = "";
           quranEnglish.value = "";
           selectedSurah = null;
@@ -804,7 +841,7 @@
         dayCheckboxes.forEach(chk => chk.checked = false);
         loadEntries();
       } catch (error) {
-        addError.textContent = error.message;
+        addError.innerText = error.message;
       }
     }
 
